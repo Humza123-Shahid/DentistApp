@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/app.js",
+    "client": "npm start --prefix client",
+    "server": "npm start --prefix server",
+    "both": "concurrently \"nodemon server/app.js\" \"npm run client\""
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1",
+    "create-react-app": "^5.1.0",
+    "nodemon": "^3.1.14"
+  }
+}
