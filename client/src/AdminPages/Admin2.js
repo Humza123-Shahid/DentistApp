@@ -5,7 +5,9 @@ import { ProcedureCreate,ProcedureList,ProcedureShow,ProcedureEdit} from './proc
 import { PricingCreate,PricingList,PricingShow,PricingEdit} from './pricing';
 import { DentistCreate,DentistList,DentistShow,DentistEdit} from './dentist';
 import { InventoryCreate,InventoryList,InventoryShow,InventoryEdit} from './inventory';
-
+import { ExpenseCreate,ExpenseList,ExpenseShow,ExpenseEdit} from './expense';
+import { PatientCreate,PatientList,PatientShow,PatientEdit} from './patient';
+import { PatientHistoryCreate,PatientHistoryList,PatientHistoryShow,PatientHistoryEdit} from './patienthistory';
 // let data = {
 //   procedure: [
 //     { id: 123, title: "Local Post",published_at:"2023-10-25T14:48:00.000Z",category:"abccateriy" ,views: 50 }
@@ -51,6 +53,13 @@ const dataProvider1 = {
                 total: json.total || 0
             }));
         }
+        else if(resource=="patienthistory"){
+          return fetchUtils.fetchJson(`${apiUrl}/api/${resource}/fetchallpatienthistories?${new URLSearchParams(query)}`)
+            .then(({ json }) => ({
+                data: json.data?.map((item, index) => ({ id: item._id,index: index + 1, ...item })),
+                total: json.total || 0
+            }));
+        }
         else{
           return fetchUtils.fetchJson(`${apiUrl}/api/${resource}/fetchall${resource}s?${new URLSearchParams(query)}`)
             .then(({ json }) => ({
@@ -68,6 +77,11 @@ const dataProvider1 = {
       `${apiUrl}/api/${resource}/fetchmanyinventories?${query}`
       );
     }
+    else if(resource=="patienthistory"){
+           response = await fetch(
+      `${apiUrl}/api/${resource}/fetchmanypatienthistories?${query}`
+      );
+        }
     else{
       response = await fetch(
       `${apiUrl}/api/${resource}/fetchmany${resource}s?${query}`
@@ -95,8 +109,27 @@ const dataProvider1 = {
     const res = await fetch(`${apiUrl}/api/${resource}/fetchsingle${resource}/${params.id}`);
     const data = await res.json();
     console.log(data);
+    const parts = data?.xrayFilePath?.split('\\')
+        const remainingParts = parts?.slice(2);
+        const newPath = remainingParts?.join('/');
+        const parts2 = data?.intraoralscanFilePath?.split('\\')
+        const remainingParts2 = parts2?.slice(2);
+        const newPath2 = remainingParts2?.join('/');
     return {
-      data: { ...data, id: data._id },
+      data: { ...data,
+       file: data.xrayFilePath
+                ? {
+                      src: `http://localhost:5000/${data.xrayFilePath}`,
+                      title: newPath,
+                  }
+                : null,
+            file2: data.intraoralscanFilePath
+                ? {
+                      src: `http://localhost:5000/${data.intraoralscanFilePath}`,
+                      title2: newPath2,
+                  }
+                : null,
+       id: data._id },
     };
   },
   // update: (resource, params) => {
@@ -118,14 +151,46 @@ const dataProvider1 = {
   // },
   create: async (resource, params) => {
     console.log(resource,params)
-    const res = await fetch(`${apiUrl}/api/${resource}/add${resource}`, {
+    let res ={}
+    if(resource=="patienthistory"){
+      const formData = new FormData();
+
+    formData.append("patient", params.data.patient);
+    formData.append("chronicConditions", params.data.chronicConditions);
+    formData.append("cavaties", params.data.cavaties);
+    formData.append("crowns", params.data.crowns);
+    formData.append("fillings", params.data.fillings);
+    if (params.data.file) {
+      formData.append("xray", params.data.file.rawFile);
+    }
+    else
+    {
+      formData.append("xray", null);
+    }
+    if (params.data.file2) {
+      formData.append("intraoralscan", params.data.file2.rawFile);
+    }
+    else{
+      formData.append("intraoralscan", null);
+    }
+
+    res = await fetch(`${apiUrl}/api/${resource}/add${resource}`, {
+      method: "POST",
+
+      body: formData,
+    });
+    }
+    else{
+
+    
+    res = await fetch(`${apiUrl}/api/${resource}/add${resource}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params.data),
     });
-
+  }
     const data = await res.json();
-
+    console.log(data)
     return {
       data: { ...data, id: data._id },
     };
@@ -133,16 +198,47 @@ const dataProvider1 = {
    
   },
   update: async (resource, params) => {
-    const res = await fetch(`${apiUrl}/api/${resource}/update${resource}/${params.id}`, {
+    let res ={}
+    if(resource=="patienthistory"){
+      const formData = new FormData();
+
+    formData.append("patient", params.data.patient);
+    formData.append("chronicConditions", params.data.chronicConditions);
+    formData.append("cavaties", params.data.cavaties);
+    formData.append("crowns", params.data.crowns);
+    formData.append("fillings", params.data.fillings);
+    if (params.data.file) {
+      formData.append("xray", params.data.file.rawFile);
+    }
+    else
+    {
+      formData.append("xray", null);
+    }
+    if (params.data.file2) {
+      formData.append("intraoralscan", params.data.file2.rawFile);
+    }
+    else
+    {
+      formData.append("intraoralscan", null);
+    }
+
+    res = await fetch(`${apiUrl}/api/${resource}/update${resource}/${params.id}`, {
+      method: "PUT",
+
+      body: formData,
+    });
+    }
+    else{
+    res = await fetch(`${apiUrl}/api/${resource}/update${resource}/${params.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params.data),
     });
-
+  }
     const data = await res.json();
 
     return {
-      data: { ...data, id: data._id },
+      data: { ...data, id: data.data._id },
     };
   },
 
@@ -195,6 +291,9 @@ const Admin2 = (props) => {
          <Resource name="procedure" options={{ label: 'Procedure' }} list={ProcedureList} create={ProcedureCreate} show={ProcedureShow} edit={ProcedureEdit} />
          <Resource name="pricing" options={{ label: 'Pricing' }} list={PricingList} create={PricingCreate} show={PricingShow} edit={PricingEdit} />
          <Resource name="inventory" options={{ label: 'Inventory' }} list={InventoryList} create={InventoryCreate} show={InventoryShow} edit={InventoryEdit} />
+         <Resource name="expense" options={{ label: 'Expense' }} list={ExpenseList} create={ExpenseCreate} show={ExpenseShow} edit={ExpenseEdit} />
+         <Resource name="patient" options={{ label: 'Patient' }} list={PatientList} create={PatientCreate} show={PatientShow} edit={PatientEdit} />
+         <Resource name="patienthistory" options={{ label: 'Patient History' }} list={PatientHistoryList} create={PatientHistoryCreate} show={PatientHistoryShow} edit={PatientHistoryEdit} />
 
     </Admin>
   )

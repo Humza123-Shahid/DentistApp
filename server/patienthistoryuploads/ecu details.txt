@@ -1,0 +1,42 @@
+I need a professional WordPress website for my automotive services business (BMC Car Care services Group).
+
+The website must include three main divisions:
+
+1. BMC Electromechanics
+Services: auto electrical diagnostics, ECU programming, CAN bus diagnostics and mobile mechanic services.
+Customers must be able to book a diagnostic appointment online.
+Booking fee: £120 (paid online before confirmation).
+Customer enters: car registration, problem description, location and contact details.
+
+2. BMC Custom Tuning
+Customer can search their vehicle by UK registration number (vehicle lookup API).
+The system retrieves vehicle details automatically (make, model, engine).
+After selecting the vehicle, the customer can see available tuning options (Stage 1, Stage 2 etc).
+Price may vary depending on location/postcode.
+Customer must be able to pay online.
+
+3. BMC Injector Removal
+Customer completes a short questionnaire:
+- vehicle registration
+- engine type
+- number of injectors stuck
+- previous attempts to remove
+- location/postcode
+
+Based on the answers the system generates a price estimate and allows the customer to pay online.
+
+Additional requirements:
+- modern professional design
+- mobile responsive
+- Stripe payment integration
+- booking calendar
+- Google Maps integration
+- SEO friendly structure
+
+The website should be built on WordPress and easy to manage after completion.
+Please start your proposal with the word BMC so I know you have read the full project description.
+
+I will also need simple logo designs for the following divisions:
+BMC Electromechanics
+BMC Custom Tuning
+BMC Injector Removal

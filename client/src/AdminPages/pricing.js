@@ -56,7 +56,7 @@ export const PricingList = () => {
 export const PricingShow = (props) => (
   <Show {...props} title="View Pricing">
     <SimpleShowLayout>
-        <TextField  source="index" />
+        {/* <TextField  source="index" /> */}
         <ReferenceField  source="procedure" reference="procedure">
             <TextField  source="name" />
         </ReferenceField >

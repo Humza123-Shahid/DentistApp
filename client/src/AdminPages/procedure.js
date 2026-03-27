@@ -1,29 +1,32 @@
 // in src/posts.js
 import * as React from 'react';
 import { useEffect } from 'react';
-import { Show, SimpleShowLayout,Datagrid,useRedirect ,FunctionField, TextField,NumberField,List, DataTable, DateField, BooleanField,Create, SimpleForm, TextInput,NumberInput,Edit,ReferenceInput,AutocompleteInput,SelectInput,RichTextInput, DateInput, required } from 'react-admin';
+import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, AutocompleteInput, SelectInput, RichTextInput, DateInput,ImageInput,ImageField, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
 
 export const ProcedureCreate = () => {
-  const choices = [
-    { id: 'tech', name: 'Technology' },
-    { id: 'lifestyle', name: 'Lifestyle' },
-    { id: 'people', name: 'People' },
-];
-return(
-    <Create redirect="list" title="Create Procedure">
-        <SimpleForm>
-            <TextInput  source="name" validate={[required()]} />
-            <TextInput  source="code"/>
-            <TextInput  source="description" multiline={true}/>
-            <TextInput  source="category"/>
-            <NumberInput  source="durationMinutes" />
-            {/* <AutocompleteInput source="category" choices={choices} /> */}
-            
-            {/* <RichTextInput source="body" /> */}
-            {/* <DateInput  label="Publication date" source="published_at" defaultValue={new Date()} /> */}
-        </SimpleForm>
-    </Create>)
+    const choices = [
+        { id: 'tech', name: 'Technology' },
+        { id: 'lifestyle', name: 'Lifestyle' },
+        { id: 'people', name: 'People' },
+    ];
+    return (
+        <Create redirect="list" title="Create Procedure">
+            <SimpleForm>
+                <TextInput source="name" validate={[required()]} />
+                <TextInput source="code" />
+                <TextInput source="description" multiline={true} />
+                <TextInput source="category" />
+                <NumberInput source="durationMinutes" />
+                {/* <ImageInput source="file" label="Upload Image" accept="image/*">
+                    <ImageField source="src" title="title" />
+                </ImageInput> */}
+                {/* <AutocompleteInput source="category" choices={choices} /> */}
+
+                {/* <RichTextInput source="body" /> */}
+                {/* <DateInput  label="Publication date" source="published_at" defaultValue={new Date()} /> */}
+            </SimpleForm>
+        </Create>)
 };
 const sequentialId = (record, source, index) => {
     // Note: 'record' refers to the item, 'index' is the 0-based index in the current page
@@ -31,37 +34,37 @@ const sequentialId = (record, source, index) => {
     return index + 1; // Simplest version (resets per page)
 };
 export const ProcedureList = () => {
-    
-    
-    return(
-    <List title="Procedure">
-        <Datagrid  rowClick="show">
-          
-            {/* <TextField  source="id" /> */}
-            <TextField  source="index" />
-            <TextField  source="name" />
-            <TextField  source="code" />
-            <TextField  source="description" />
-            {/* <DateField  source="published_at" field={DateField} /> */}
-            <TextField source="category" />
-            <NumberField  source="durationMinutes" />
-            {/* <DataTable.Col source="commentable" field={BooleanField} /> */}
-        </Datagrid >
-    </List>)
+
+
+    return (
+        <List title="Procedure">
+            <Datagrid rowClick="show">
+
+                {/* <TextField  source="id" /> */}
+                <TextField source="index" />
+                <TextField source="name" />
+                <TextField source="code" />
+                <TextField source="description" />
+                {/* <DateField  source="published_at" field={DateField} /> */}
+                <TextField source="category" />
+                <NumberField source="durationMinutes" />
+                {/* <DataTable.Col source="commentable" field={BooleanField} /> */}
+            </Datagrid >
+        </List>)
 };
 export const ProcedureShow = (props) => (
-  <Show {...props} title="View Procedure">
-    <SimpleShowLayout>
-      {/* <TextField source="description" /> */}
-            <TextField  source="name" />
-            <TextField  source="code" />
-            <TextField  source="description" />
+    <Show {...props} title="View Procedure">
+        <SimpleShowLayout>
+            {/* <TextField source="description" /> */}
+            <TextField source="name" />
+            <TextField source="code" />
+            <TextField source="description" />
             {/* <DateField  source="published_at" field={DateField} /> */}
             <TextField source="category" />
-            <NumberField  source="durationMinutes" />
-      {/* <DateField source="published_at" field={DateField} /> */}
-    </SimpleShowLayout>
-  </Show>
+            <NumberField source="durationMinutes" />
+            {/* <DateField source="published_at" field={DateField} /> */}
+        </SimpleShowLayout>
+    </Show>
 );
 export const ProcedureEdit = () => (
     <Edit title="Update Procedure">
@@ -69,11 +72,11 @@ export const ProcedureEdit = () => (
             {/* <TextInput disabled source="id" />
             <TextInput source="title" />
             <TextInput source="content" multiline /> */}
-            <TextInput  source="name" validate={[required()]} />
-            <TextInput  source="code"/>
-            <TextInput  source="description" multiline={true}/>
-            <TextInput  source="category"/>
-            <NumberInput  source="durationMinutes" />
+            <TextInput source="name" validate={[required()]} />
+            <TextInput source="code" />
+            <TextInput source="description" multiline={true} />
+            <TextInput source="category" />
+            <NumberInput source="durationMinutes" />
         </SimpleForm>
     </Edit>
 );
