@@ -22,6 +22,28 @@ router.get('/fetchalldentists', async (req, res) => {
     
       res.json({ data: dentists, total });
 })
+router.get('/fetchmanydentists', async (req, res) => {
+    
+    try {
+    const { ids } = req.query;
+
+    // If ids exist → handle getMany
+    if (ids) {
+      const dentists = await Dentist.find({
+        _id: { $in: ids }
+      });
+
+      return res.json(dentists);
+    }
+
+    // fallback → normal getList
+    const dentists = await Dentist.find();
+    res.json(dentists);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+})
 router.get("/fetchsingledentist/:id", async (req, res) => {
   const dentist = await Dentist.findById(req.params.id);
   res.json(dentist);

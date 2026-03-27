@@ -8,6 +8,9 @@ import { InventoryCreate,InventoryList,InventoryShow,InventoryEdit} from './inve
 import { ExpenseCreate,ExpenseList,ExpenseShow,ExpenseEdit} from './expense';
 import { PatientCreate,PatientList,PatientShow,PatientEdit} from './patient';
 import { PatientHistoryCreate,PatientHistoryList,PatientHistoryShow,PatientHistoryEdit} from './patienthistory';
+import { AppointmentCreate,AppointmentList,AppointmentShow,AppointmentEdit} from './appointment';
+import { PaymentCreate,PaymentList,PaymentShow,PaymentEdit} from './payment';
+
 // let data = {
 //   procedure: [
 //     { id: 123, title: "Local Post",published_at:"2023-10-25T14:48:00.000Z",category:"abccateriy" ,views: 50 }
@@ -294,6 +297,8 @@ const Admin2 = (props) => {
          <Resource name="expense" options={{ label: 'Expense' }} list={ExpenseList} create={ExpenseCreate} show={ExpenseShow} edit={ExpenseEdit} />
          <Resource name="patient" options={{ label: 'Patient' }} list={PatientList} create={PatientCreate} show={PatientShow} edit={PatientEdit} />
          <Resource name="patienthistory" options={{ label: 'Patient History' }} list={PatientHistoryList} create={PatientHistoryCreate} show={PatientHistoryShow} edit={PatientHistoryEdit} />
+         <Resource name="appointment" options={{ label: 'Appointment' }} list={AppointmentList} create={AppointmentCreate} show={AppointmentShow} edit={AppointmentEdit} />
+         <Resource name="payment" options={{ label: 'Payment' }} list={PaymentList} create={PaymentCreate} show={PaymentShow} edit={PaymentEdit} />
 
     </Admin>
   )

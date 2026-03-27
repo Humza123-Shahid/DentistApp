@@ -22,28 +22,28 @@ let filter = {};
 
   res.json({ data: pricings, total });
 })
-// router.get('/fetchmanypricings', async (req, res) => {
+router.get('/fetchmanypricings', async (req, res) => {
     
-//     try {
-//     const { ids } = req.query;
+    try {
+    const { ids } = req.query;
 
-//     // If ids exist → handle getMany
-//     if (ids) {
-//       const pricings = await Pricing.find({
-//         _id: { $in: ids }
-//       });
+    // If ids exist → handle getMany
+    if (ids) {
+      const pricings = await Pricing.find({
+        _id: { $in: ids }
+      });
 
-//       return res.json(pricings);
-//     }
+      return res.json(pricings);
+    }
 
-//     // fallback → normal getList
-//     const pricings = await Pricing.find();
-//     res.json(pricings);
+    // fallback → normal getList
+    const pricings = await Pricing.find();
+    res.json(pricings);
 
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// })
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+})
 router.get("/fetchsinglepricing/:id", async (req, res) => {
   const pricing = await Pricing.findById(req.params.id);
   res.json(pricing);
