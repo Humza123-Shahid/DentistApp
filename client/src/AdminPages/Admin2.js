@@ -10,6 +10,7 @@ import { PatientCreate,PatientList,PatientShow,PatientEdit} from './patient';
 import { PatientHistoryCreate,PatientHistoryList,PatientHistoryShow,PatientHistoryEdit} from './patienthistory';
 import { AppointmentCreate,AppointmentList,AppointmentShow,AppointmentEdit} from './appointment';
 import { PaymentCreate,PaymentList,PaymentShow,PaymentEdit} from './payment';
+import { ToothCreate,ToothList,ToothShow,ToothEdit} from './tooth';
 
 // let data = {
 //   procedure: [
@@ -299,6 +300,7 @@ const Admin2 = (props) => {
          <Resource name="patienthistory" options={{ label: 'Patient History' }} list={PatientHistoryList} create={PatientHistoryCreate} show={PatientHistoryShow} edit={PatientHistoryEdit} />
          <Resource name="appointment" options={{ label: 'Appointment' }} list={AppointmentList} create={AppointmentCreate} show={AppointmentShow} edit={AppointmentEdit} />
          <Resource name="payment" options={{ label: 'Payment' }} list={PaymentList} create={PaymentCreate} show={PaymentShow} edit={PaymentEdit} />
+         <Resource name="tooth" options={{ label: 'Tooth' }} list={ToothList} create={ToothCreate} show={ToothShow} edit={ToothEdit} />
 
     </Admin>
   )
