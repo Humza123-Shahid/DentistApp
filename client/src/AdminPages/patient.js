@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, useRecordContext, required } from 'react-admin';
+import { useParams } from 'react-router-dom';
+import { Show, SimpleShowLayout, Datagrid, ReferenceManyField, useShowContext, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, useRecordContext, required } from 'react-admin';
 
 const PROCEDURES = [
     { id: "filling", label: "Filling", color: "#3b82f6", symbol: "F" },
@@ -268,6 +269,11 @@ function ProcedureBadge({ proc, onRemove }) {
     );
 }
 export default function TeethMap() {
+
+    const storedId = localStorage.getItem('patientId');
+    console.log(storedId)
+    const patient_id = JSON.parse(storedId);
+    console.log(patient_id)
     //   const [procedures, setProcedures] = useState({
     //     16: [PROCEDURES[0]], // filling on 16
     //     11: [PROCEDURES[1]], // crown on 11
@@ -313,8 +319,9 @@ export default function TeethMap() {
     };
     const [procedures, setProcedures] = useState({});
     useEffect(() => {
+        console.log(patient_id)
         const fetchData = async () => {
-            const response = await fetch("http://localhost:5000/api/tooth/fetchalltooths", {
+            const response = await fetch(`http://localhost:5000/api/tooth/fetchtoothsbypatient/${patient_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -990,21 +997,75 @@ export default function TeethMap() {
         </div>
     );
 }
-export const PatientShow = (props) => (
-    <Show {...props} title="View Patient">
-        <SimpleShowLayout>
-            <TextField source="name" />
-            <TextField source="email" />
-            <TextField source="address" />
-            <TextField source="contact" />
-            <DateField source="dateOfBirth" field={DateField} />
-            <NumberField source="age" />
-            <TextField source="gender" />
-            <TextField source="nationality" />
-        </SimpleShowLayout>
-        <TeethMap />
-    </Show>
+const PatientHistory = () => (
+    <ReferenceField
+        source="patient"
+        reference="patienthistory"
+    >
+        {/* Use a Datagrid to display the list of history items */}
+
+        <TextField source="chronicConditions" />
+        <TextField source="cavaties" />
+        <TextField source="crowns" />
+        <TextField source="fillings" />
+        <TextField source="xrayFilePath" />
+        <TextField source="intraoralscanFilePath" />
+        {/* Add other relevant history fields */}
+
+    </ReferenceField>
 );
+
+export const PatientShow = (props) => {
+    const { id } = useParams();
+    localStorage.setItem('patientId', JSON.stringify(id));
+    return (
+        <>
+        <Show {...props} title="View Patient">
+            
+            <SimpleShowLayout sx={{
+                marginBottom: '3em'
+            }} >
+                <TextField source="name" />
+                <TextField source="email" />
+                <TextField source="address" />
+                <TextField source="contact" />
+                <DateField source="dateOfBirth" field={DateField} />
+                <NumberField source="age" />
+                <TextField source="gender" />
+                <TextField source="nationality" />
+
+                {/* <PatientHistory /> */}
+            </SimpleShowLayout>
+        
+            <TeethMap />
+
+           
+            
+            <SimpleShowLayout sx={{
+                marginTop: '2em'
+            }}>
+            <ReferenceManyField
+                label="Patient History"
+                reference="patienthistory"   // your API resource name
+                target="patient"            // foreign key in patientHistory table
+            >
+                
+                <Datagrid bulkActionButtons={false}>
+                    <TextField source="chronicConditions" />
+                    <TextField source="cavaties" />
+                    <TextField source="crowns" />
+                    <TextField source="fillings" />
+                    <TextField source="xrayFilePath" />
+                    <TextField source="intraoralscanFilePath" />
+                </Datagrid>
+
+            </ReferenceManyField>
+            </SimpleShowLayout>
+            
+        </Show>
+        </>
+    )
+};
 // function PatientShowLayout() {
 //   const record = _useRecordContext();
 

@@ -271,6 +271,73 @@ const dataProvider1 = {
       data: data.data, // must return array of deleted ids
     };
   },
+  getManyReference: async (resource, params) => {
+        const { target, id, pagination, sort, filter } = params;
+        const { page, perPage } = pagination;
+        const { field, order } = sort;
+
+        const query = new URLSearchParams({
+            [target]: id,          // e.g. post_id=123
+            _sortField: field,
+            _sortOrder: order,
+            _page: page,
+            _perPage: perPage,
+            ...filter,
+        });
+
+        const response = await fetch(`${apiUrl}/api/${resource}/${resource}bypatientId?${query}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const { data, total } = await response.json();
+        console.log(data);
+        // return {
+        //     data: data.items,   // array of records
+        //     total: data.total,  // total count for pagination
+        // };
+        return { data, total };
+    },
+    // getManyReference: async (resource, params) => {
+    //     const { target, id, pagination, sort, filter } = params;
+    //     const { page, perPage } = pagination;
+    //     const { field, order } = sort;
+
+    //     // Build query string
+    //     const query = new URLSearchParams({
+    //         [target]: id,
+    //         _sort: field,
+    //         _order: order,
+    //         _start: (page - 1) * perPage,
+    //         _end: page * perPage,
+    //         ...filter,
+    //     });
+
+    //     const url = `https://your-api.com/${resource}?${query}`;
+
+    //     const response = await fetch(url, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             Authorization: `Bearer ${localStorage.getItem('token')}`,
+    //         },
+    //     });
+
+    //     if (!response.ok) {
+    //         const error = await response.json();
+    //         throw new Error(error.message || response.statusText);
+    //     }
+
+    //     // Total count from header (common REST pattern)
+    //     const total = parseInt(response.headers.get('X-Total-Count'), 10);
+    //     const data = await response.json();
+
+    //     return {
+    //         data,    // must be an array with `id` field in each record
+    //         total,
+    //     };
+    // },
   // delete: (resource, params) => {
   //   const index = data[resource].findIndex(
   //     item => item.id === params.id

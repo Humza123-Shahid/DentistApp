@@ -39,7 +39,7 @@ router.get('/fetchmanypatienthistories', async (req, res) => {
     }
 
     // fallback → normal getList
-    const patienthistories = await Procedure.find();
+    const patienthistories = await PatientHistory.find();
     res.json(patienthistories);
 
   } catch (err) {
@@ -49,6 +49,57 @@ router.get('/fetchmanypatienthistories', async (req, res) => {
 router.get("/fetchsinglepatienthistory/:id", async (req, res) => {
   const patienthistory = await PatientHistory.findById(req.params.id);
   res.json(patienthistory);
+});
+router.get('/patienthistorybypatientId', async (req, res) => {
+    // const { filter } = req.query;
+    // const { filterObj  } = JSON.parse(filter || '{}');
+    
+    // const history = await PatientHistory.find({ patient:filterObj.patient });
+    // // res.json({ data: history, total: history.length });
+    // const formatted = history.map(d => ({ ...d.toObject(), id: d._id.toString() }));
+
+    // //res.set('Content-Range', `patient-history ${from}-${to}/${total}`);
+    // res.json(formatted);
+    try {
+    const {
+      patient,
+      _page     = 1,
+      _perPage  = 10,
+      _sortField = 'createdAt',
+      _sortOrder = 'DESC',
+      ...otherFilters
+    } = req.query;
+  console.log(patient);
+    // 1. Build filter
+    const filter = { ...otherFilters };
+    if (patient) filter.patient = patient;
+
+    // 2. Sorting
+    const sortOrder = _sortOrder === 'DESC' ? -1 : 1;
+    const sort = { [_sortField]: sortOrder };
+
+    // 3. Pagination
+    const skip  = (Number(_page) - 1) * Number(_perPage);
+    const limit = Number(_perPage);
+
+    // 4. Query
+    const [data, total] = await Promise.all([
+      PatientHistory.find(filter).sort(sort).skip(skip).limit(limit).lean(),
+      PatientHistory.countDocuments(filter),
+    ]);
+   console.log(data);
+    // 5. Map _id → id (react-admin expects "id")
+    const formatted = data.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+
+    res.json({ data: formatted, total });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+router.get('/patient-history/:id', async (req, res) => {
+    const history = await PatientHistory.findById(req.params.id);
+    res.json({ data: history });
 });
 // ROUTE 1: Get All the Questions using :GET "/api/questions/fetchallquestions".Login required
 // router.get('/fetchallpatienthistories',async (req,res)=>{

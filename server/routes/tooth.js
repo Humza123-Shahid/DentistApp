@@ -42,6 +42,19 @@ router.get('/fetchmanytooths', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
+router.get('/fetchtoothsbypatient/:id', async (req, res) => {
+    
+    try {
+      // console.log(req.params.id);
+      const tooths = await Tooth.find({ patient: req.params.id });
+      // console.log(tooths);
+      return res.json( {data: tooths});
+      
+    }
+   catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+})
 router.get("/fetchsingletooth/:id", async (req, res) => {
   try {
     const tooth = await Tooth.findById(req.params.id);

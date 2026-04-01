@@ -35,7 +35,10 @@ return(
               { id: "Crown", name: "Crown" },
               { id: "Root Canal", name: "Root Canal" },
               { id: "Extraction", name: "Extraction" },
-              { id: "Sealant", name: "Sealant" }
+              { id: "Implant", name: "Implant" }, 
+              { id: "Veneer", name: "Veneer" },
+              { id: "Bridge", name: "Bridge" },
+              { id: "Cleaning", name: "Cleaning" }
             ]}
           />
 
