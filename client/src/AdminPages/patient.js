@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Show, SimpleShowLayout, Datagrid, ReferenceManyField, useShowContext, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, useRecordContext, required } from 'react-admin';
+import { Show, SimpleShowLayout, Datagrid, ReferenceManyField, useShowContext, useListContext, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, useRecordContext, required } from 'react-admin';
 
 const PROCEDURES = [
     { id: "filling", label: "Filling", color: "#3b82f6", symbol: "F" },
@@ -89,7 +89,7 @@ export const PatientList = () => {
             <Datagrid rowClick="show">
 
                 {/* <TextField  source="id" /> */}
-                <TextField source="index" />
+                <TextField source="index" label="#" />
                 <TextField source="name" />
                 <TextField source="email" />
                 <TextField source="address" />
@@ -997,72 +997,155 @@ export default function TeethMap() {
         </div>
     );
 }
-const PatientHistory = () => (
-    <ReferenceField
-        source="patient"
-        reference="patienthistory"
-    >
-        {/* Use a Datagrid to display the list of history items */}
+// const PatientHistory = () => (
+//     <ReferenceField
+//         source="patient"
+//         reference="patienthistory"
+//     >
+//         {/* Use a Datagrid to display the list of history items */}
 
-        <TextField source="chronicConditions" />
-        <TextField source="cavaties" />
-        <TextField source="crowns" />
-        <TextField source="fillings" />
-        <TextField source="xrayFilePath" />
-        <TextField source="intraoralscanFilePath" />
-        {/* Add other relevant history fields */}
+//         <TextField source="chronicConditions" />
+//         <TextField source="cavaties" />
+//         <TextField source="crowns" />
+//         <TextField source="fillings" />
+//         <TextField source="xrayFilePath" />
+//         <TextField source="intraoralscanFilePath" />
+//         {/* Add other relevant history fields */}
 
-    </ReferenceField>
-);
+//     </ReferenceField>
+// );
+const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
+    const { data, isLoading } = useListContext();
 
+    if (isLoading) return <span>Loading...</span>;
+    if (!data || data.length === 0) return <span style={{
+        padding: "14px",
+        display: "inline-block",
+        fontSize:"0.875rem"
+    }}>No records</span>;
+    console.log(data);
+    // Group by appointment_id and sum values
+    const grouped = data.reduce((acc, record) => {
+        const appointmentId = record.appointmentId;
+        if (!acc[appointmentId]) {
+            acc[appointmentId] = {
+                appointmentId,
+                paidSum: 0,
+                totalAmount: record[totalAmountSource] ?? 0, // same for all in group
+            };
+        }
+        acc[appointmentId].paidSum += Number(record.amount) || 0;
+        return acc;
+    }, {});
+
+    const rows = Object.values(grouped);
+
+    return (
+        <table style={{ borderCollapse: 'collapse', width: '100%', marginTop: 8 }}>
+            <thead>
+                <tr style={{ background: '#f5f5f5' }}>
+                    <th style={th}>Appointment #</th>
+                    <th style={th}>Total Amount</th>
+                    <th style={th}>Paid (Sum)</th>
+                    <th style={th}>Due Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rows.map((row,index) => {
+                    const due = row.totalAmount - row.paidSum;
+                    return (
+                        <tr key={row.appointmentId}>
+                            <td style={td}>{index+1}</td>
+                            <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
+                            <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
+                            <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
+                                Rs {due.toFixed(2)}
+                            </td>
+                        </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+    );
+};
+
+const th = { padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #ddd' };
+const td = { padding: '8px 12px', borderBottom: '1px solid #eee' };
 export const PatientShow = (props) => {
     const { id } = useParams();
     localStorage.setItem('patientId', JSON.stringify(id));
     return (
         <>
-        <Show {...props} title="View Patient">
-            
-            <SimpleShowLayout sx={{
-                marginBottom: '3em'
-            }} >
-                <TextField source="name" />
-                <TextField source="email" />
-                <TextField source="address" />
-                <TextField source="contact" />
-                <DateField source="dateOfBirth" field={DateField} />
-                <NumberField source="age" />
-                <TextField source="gender" />
-                <TextField source="nationality" />
+            <Show {...props} title="View Patient" sx={{ mb: 3 }}>
 
-                {/* <PatientHistory /> */}
-            </SimpleShowLayout>
-        
-            <TeethMap />
+                <SimpleShowLayout sx={{
+                    marginBottom: '3em'
+                }} >
+                    <TextField source="name" />
+                    <TextField source="email" />
+                    <TextField source="address" />
+                    <TextField source="contact" />
+                    <DateField source="dateOfBirth" field={DateField} />
+                    <NumberField source="age" />
+                    <TextField source="gender" />
+                    <TextField source="nationality" />
 
-           
-            
-            <SimpleShowLayout sx={{
-                marginTop: '2em'
-            }}>
-            <ReferenceManyField
-                label="Patient History"
-                reference="patienthistory"   // your API resource name
-                target="patient"            // foreign key in patientHistory table
-            >
-                
-                <Datagrid bulkActionButtons={false}>
-                    <TextField source="chronicConditions" />
-                    <TextField source="cavaties" />
-                    <TextField source="crowns" />
-                    <TextField source="fillings" />
-                    <TextField source="xrayFilePath" />
-                    <TextField source="intraoralscanFilePath" />
-                </Datagrid>
+                    {/* <PatientHistory /> */}
+                </SimpleShowLayout>
+            </Show>
+            <Show actions={false} sx={{ mb: 3 }}>
+                <TeethMap />
+            </Show>
 
-            </ReferenceManyField>
-            </SimpleShowLayout>
-            
-        </Show>
+            <Show actions={false} >
+                <SimpleShowLayout sx={{
+                    marginTop: '0em'
+                }}>
+                    <ReferenceManyField
+                        label="Patient History"
+                        reference="patienthistory"   // your API resource name
+                        target="patient"            // foreign key in patientHistory table
+                    >
+
+                        <Datagrid bulkActionButtons={false} rowClick={false}>
+                            <TextField source="chronicConditions" />
+                            <TextField source="cavaties" />
+                            <TextField source="crowns" />
+                            <TextField source="fillings" />
+                            {/* <TextField source="xrayFilePath" /> */}
+                            <FunctionField
+                                label="Xray File Path"
+                                render={(record) => (
+                                    <a
+                                        href={` http://localhost:5000/${record.xrayFilePath}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {record.xrayFilePath}
+                                    </a>
+                                )}
+                            />
+                            <TextField source="intraoralscanFilePath" />
+                        </Datagrid>
+
+                    </ReferenceManyField>
+                </SimpleShowLayout>
+
+            </Show>
+            <Show actions={false}>
+                <SimpleShowLayout>
+                    {/* other fields */}
+
+                    <ReferenceManyField
+                        label="Payment Summary"
+                        reference="payment"         // your payments resource
+                        target="patientId"      // FK in payments table
+                    >
+                        <AggregatedPaymentSummary totalAmountSource="totalAmount" />
+                    </ReferenceManyField>
+
+                </SimpleShowLayout>
+            </Show>
         </>
     )
 };

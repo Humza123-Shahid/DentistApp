@@ -41,7 +41,7 @@ export const ProcedureList = () => {
             <Datagrid rowClick="show">
 
                 {/* <TextField  source="id" /> */}
-                <TextField source="index" />
+                <TextField source="index" label="#" />
                 <TextField source="name" />
                 <TextField source="code" />
                 <TextField source="description" />

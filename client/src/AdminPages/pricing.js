@@ -43,7 +43,7 @@ export const PricingList = () => {
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}
-            <TextField  source="index" />
+            <TextField  source="index" label="#" />
             <ReferenceField  source="procedure" reference="procedure">
                 <TextField  source="name" />
             </ReferenceField >

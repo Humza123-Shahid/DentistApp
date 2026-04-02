@@ -37,7 +37,7 @@ export const InventoryList = () => {
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}
-            <TextField  source="index" />
+            <TextField  source="index" label="#" />
             <TextField  source="name" />
             <NumberField  source="quantity" />
             <TextField  source="description" />

@@ -39,7 +39,7 @@ export const ExpenseList = () => {
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}
-            <TextField  source="index" />
+            <TextField  source="index" label="#" />
             <DateField  source="expenseDate" field={DateField} />
             <TextField  source="category" />
             <NumberField  source="amount" />

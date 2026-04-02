@@ -68,7 +68,7 @@ export const ToothList = () => {
     return(
   <List>
     <Datagrid rowClick="show">
-      <TextField source="index" />
+      <TextField source="index" label="#" />
       
       <ReferenceField source="patient" reference="patient">
         <TextField source="name" />

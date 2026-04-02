@@ -21,6 +21,9 @@ const PaymentSchema = new mongoose.Schema({
   paymentType:{                 //Procedure Payment, Deposit, Refund, Prepayment
     type: String
   },
+  totalAmount:{
+    type: Number
+  },
   amount:{
     type: Number
   },

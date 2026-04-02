@@ -37,6 +37,7 @@ export const PaymentCreate = () => {
                 <DateInput label="Payment date" source="paymentDate" defaultValue={new Date()} />
                 <TextInput source="paymentMethod" />
                 <TextInput source="paymentType" />
+                <NumberInput source="totalAmount" />
                 <NumberInput source="amount" />
                 <TextInput source="notes" />
 
@@ -56,7 +57,7 @@ export const PaymentList = () => {
             <Datagrid rowClick="show">
 
                 {/* <TextField  source="id" /> */}
-                <TextField source="index" />
+                <TextField source="index" label="#" />
                 <ReferenceField source="patientId" reference="patient">
                     <TextField source="name" />
                 </ReferenceField >
@@ -70,6 +71,7 @@ export const PaymentList = () => {
 
                 <TextField source="paymentMethod" />
                 <TextField source="paymentType" />
+                <NumberField source="totalAmount" />
                 <NumberField source="amount" />
 
                 <TextField source="notes" />
@@ -92,6 +94,7 @@ export const PaymentShow = (props) => (
 
             <TextField source="paymentMethod" />
             <TextField source="paymentType" />
+             <NumberField source="totalAmount" />
             <NumberField source="amount" />
 
             <TextField source="notes" />
@@ -119,6 +122,7 @@ export const PaymentEdit = () => (
             <DateInput label="Payment date" source="paymentDate" defaultValue={new Date()} />
             <TextInput source="paymentMethod" />
             <TextInput source="paymentType" />
+            <NumberInput source="totalAmount" />
             <NumberInput source="amount" />
             <TextInput source="notes" />
 

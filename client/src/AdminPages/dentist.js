@@ -50,7 +50,7 @@ export const DentistList = () => {
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}
-            <TextField  source="index" />
+            <TextField  source="index"  label="#" />
             <TextField  source="name" />
             <NumberField  source="salary" />
             <TextField  source="contact" />

@@ -49,17 +49,64 @@ router.get("/fetchsinglepayment/:id", async (req, res) => {
   res.json(payment);
  
 });
+router.get('/paymentbypatientId', async (req, res) => {
+    // const { filter } = req.query;
+    // const { filterObj  } = JSON.parse(filter || '{}');
+    
+    // const history = await PatientHistory.find({ patient:filterObj.patient });
+    // // res.json({ data: history, total: history.length });
+    // const formatted = history.map(d => ({ ...d.toObject(), id: d._id.toString() }));
+
+    // //res.set('Content-Range', `patient-history ${from}-${to}/${total}`);
+    // res.json(formatted);
+    try {
+    const {
+      patientId,
+      _page     = 1,
+      _perPage  = 10,
+      _sortField = 'createdAt',
+      _sortOrder = 'DESC',
+      ...otherFilters
+    } = req.query;
+  console.log(patientId);
+    // 1. Build filter
+    const filter = { ...otherFilters };
+    if (patientId) filter.patientId = patientId;
+
+    // 2. Sorting
+    const sortOrder = _sortOrder === 'DESC' ? -1 : 1;
+    const sort = { [_sortField]: sortOrder };
+
+    // 3. Pagination
+    const skip  = (Number(_page) - 1) * Number(_perPage);
+    const limit = Number(_perPage);
+
+    // 4. Query
+    const [data, total] = await Promise.all([
+      Payment.find(filter).sort(sort).skip(skip).limit(limit).lean(),
+      Payment.countDocuments(filter),
+    ]);
+   console.log(data);
+    // 5. Map _id → id (react-admin expects "id")
+    const formatted = data.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+
+    res.json({ data: formatted, total });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 router.post('/addpayment',async (req,res)=>{
     try {
         
         let success = false;
-        const {patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,amount,notes}=req.body;
+        const {patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,totalAmount,amount,notes}=req.body;
         // const errors = validationResult(req);
         // if (!errors.isEmpty()) {
         // return res.status(400).json({ success,errors: errors.array() });
         // }
         const payment=new Payment({
-           patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,amount,notes
+           patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,totalAmount,amount,notes
         })
         const savedPayment=await payment.save();
         res.json(savedPayment);
@@ -72,7 +119,7 @@ router.post('/addpayment',async (req,res)=>{
 })
 // ROUTE 3: Update an existing Payment using :PUT "/api/payments/updatepayments".Login required
 router.put('/updatepayment/:id',async (req,res)=>{
-    const {patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,amount,notes}=req.body;
+    const {patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,totalAmount,amount,notes}=req.body;
     const newPayment={};
     if(patientId){newPayment.patientId=patientId};
     if(providerId){newPayment.providerId=providerId};
@@ -80,6 +127,7 @@ router.put('/updatepayment/:id',async (req,res)=>{
     if(paymentDate){newPayment.paymentDate=paymentDate};
     if(paymentMethod){newPayment.paymentMethod=paymentMethod};
     if(paymentType){newPayment.paymentType=paymentType};
+    if(totalAmount){newPayment.totalAmount=totalAmount};
     if(amount){newPayment.amount=amount};
     if(notes){newPayment.notes=notes};
 

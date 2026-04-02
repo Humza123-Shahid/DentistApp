@@ -51,7 +51,7 @@ export const AppointmentList = () => {
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}
-            <TextField  source="index" />
+            <TextField  source="index" label="#"  />
             <ReferenceField  source="patient" reference="patient">
                 <TextField  source="name" />
             </ReferenceField >
