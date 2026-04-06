@@ -423,6 +423,30 @@ export default function TeethMap() {
         });
     };
 
+    const handleSave = async () => {
+        const formattedData = Object.entries(procedures).map(([toothNum, procs]) => ({
+            patient: patient_id,
+            toothNumber: parseInt(toothNum),
+            procedures: procs.map(p => ({
+                procedureType: p.label, // Maps 'Crown' to enum
+                status: 'Completed'     // Defaulting based on context
+            }))
+        }));
+
+        const response = await fetch(`http://localhost:5000/api/tooth/addtoothbyadmin/${patient_id}`, {
+           
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formattedData),
+            
+        })
+        const json = await response.json();
+        if(response.ok)
+        {
+            alert("Patient Tooth data saved successfully!!")
+        }
+
+    };
     const totalProcedures = Object.values(procedures).flat().length;
     const affectedTeeth = Object.keys(procedures).length;
 
@@ -833,6 +857,7 @@ export default function TeethMap() {
                                     >
                                         ×
                                     </button>
+
                                 </div>
 
                                 {(procedures[selectedTooth] || []).length === 0 ? (
@@ -858,7 +883,24 @@ export default function TeethMap() {
                                 )}
                             </div>
                         )}
+                        <button
+                            onClick={handleSave}
 
+                            style={{
+                                background: "#1e3a5f",
+                                border: "1px solid #38bdf8",
+                                color: "#38bdf8",
+                                borderRadius: 8,
+                                padding: "7px 18px",
+                                marginBottom: "18px",
+                                fontSize: 12,
+                                cursor: "pointer",
+                                fontFamily: "'JetBrains Mono', monospace",
+                                transition: "all 0.15s",
+                            }}
+                        >
+                            Save Procedures
+                        </button>
                         {/* Legend */}
                         <div
                             style={{
@@ -1021,7 +1063,7 @@ const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
     if (!data || data.length === 0) return <span style={{
         padding: "14px",
         display: "inline-block",
-        fontSize:"0.875rem"
+        fontSize: "0.875rem"
     }}>No records</span>;
     console.log(data);
     // Group by appointment_id and sum values
@@ -1051,11 +1093,11 @@ const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
                 </tr>
             </thead>
             <tbody>
-                {rows.map((row,index) => {
+                {rows.map((row, index) => {
                     const due = row.totalAmount - row.paidSum;
                     return (
                         <tr key={row.appointmentId}>
-                            <td style={td}>{index+1}</td>
+                            <td style={td}>{index + 1}</td>
                             <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
                             <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
                             <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
@@ -1093,11 +1135,11 @@ export const PatientShow = (props) => {
                     {/* <PatientHistory /> */}
                 </SimpleShowLayout>
             </Show>
-            <Show actions={false} sx={{ mb: 3 }}>
+            <Show title={false} actions={false} sx={{ mb: 3 }}>
                 <TeethMap />
             </Show>
 
-            <Show actions={false} >
+            <Show title={false} actions={false} >
                 <SimpleShowLayout sx={{
                     marginTop: '0em'
                 }}>
@@ -1132,7 +1174,7 @@ export const PatientShow = (props) => {
                 </SimpleShowLayout>
 
             </Show>
-            <Show actions={false}>
+            <Show title={false} actions={false}>
                 <SimpleShowLayout>
                     {/* other fields */}
 

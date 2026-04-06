@@ -65,10 +65,28 @@ router.get("/fetchsingletooth/:id", async (req, res) => {
 });
 router.post("/addtooth", async (req, res) => {
   try {
+    console.log(req.body);
     const tooth = new Tooth(req.body);
     const saved = await tooth.save();
 
     res.json(saved);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+router.post("/addtoothbyadmin/:id", async (req, res) => {
+  try {
+    console.log(req.body);
+    
+    console.log(req.params.id);
+    // const tooth = new Tooth(req.
+    // body);
+    const formattedData = req.body;
+    await Tooth.deleteMany({ patient: req.params.id });
+    // const saved = await tooth.save();
+    await Tooth.insertMany(formattedData);
+    res.status(201).json({ message: "Procedures saved successfully" });
+    // res.json(saved);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
