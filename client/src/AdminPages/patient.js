@@ -1058,7 +1058,7 @@ export default function TeethMap() {
 // );
 const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
     const { data, isLoading } = useListContext();
-
+    let totalDue=0;
     if (isLoading) return <span>Loading...</span>;
     if (!data || data.length === 0) return <span style={{
         padding: "14px",
@@ -1093,9 +1093,14 @@ const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
                 </tr>
             </thead>
             <tbody>
-                {rows.map((row, index) => {
+                {rows.map((row, index,array) => {
                     const due = row.totalAmount - row.paidSum;
-                    return (
+                    totalDue=+due;
+                    return(
+                    <>
+                    {index === array.length - 1 ? 
+                        
+                        <>
                         <tr key={row.appointmentId}>
                             <td style={td}>{index + 1}</td>
                             <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
@@ -1104,7 +1109,29 @@ const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
                                 Rs {due.toFixed(2)}
                             </td>
                         </tr>
-                    );
+                        <tr>
+                            <td style={td}>Total Due Amount</td>
+                            <td style={td}></td>
+                            <td style={td}></td>
+                            <td style={{ ...td, color: totalDue > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
+                                Rs {totalDue.toFixed(2)}
+                            </td>
+                        </tr>
+                        </>
+                    
+     : 
+    
+                        <tr key={row.appointmentId}>
+                            <td style={td}>{index + 1}</td>
+                            <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
+                            <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
+                            <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
+                                Rs {due.toFixed(2)}
+                            </td>
+                        </tr>
+                    
+    }
+                   </>)
                 })}
             </tbody>
         </table>
@@ -1163,11 +1190,23 @@ export const PatientShow = (props) => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        {record.xrayFilePath}
+                                        View File
                                     </a>
                                 )}
                             />
-                            <TextField source="intraoralscanFilePath" />
+                            {/* <TextField source="intraoralscanFilePath" /> */}
+                            <FunctionField
+                                label="Intraoralscan File Path"
+                                render={(record) => (
+                                    <a
+                                        href={` http://localhost:5000/${record.intraoralscanFilePath}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        View File
+                                    </a>
+                                )}
+                            />
                         </Datagrid>
 
                     </ReferenceManyField>
