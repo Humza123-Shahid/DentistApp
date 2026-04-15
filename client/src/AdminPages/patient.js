@@ -1176,13 +1176,22 @@ export const PatientShow = (props) => {
                         target="patient"            // foreign key in patientHistory table
                     >
 
-                        <Datagrid bulkActionButtons={false} rowClick={false}>
-                            <TextField source="chronicConditions" />
-                            <TextField source="cavaties" />
-                            <TextField source="crowns" />
-                            <TextField source="fillings" />
+                        <Datagrid bulkActionButtons={false} rowClick={false} sx={{
+    '& .RaDatagrid-headerCell': {
+        backgroundColor: '#f5f5f5',
+        fontWeight:'bolder',
+        fontSize:'1rem',
+        borderBottom: '2px solid #ddd'
+    },
+    // '& .RaDatagrid-rowCell': {  fontSize:'1rem' }, 
+}}>
+                            <TextField sx={{fontSize:'1rem'}} source="chronicConditions" />
+                            <TextField sx={{fontSize:'1rem'}} source="cavaties" />
+                            <TextField sx={{fontSize:'1rem'}} source="crowns" />
+                            <TextField sx={{fontSize:'1rem'}} source="fillings" />
                             {/* <TextField source="xrayFilePath" /> */}
                             <FunctionField
+                                sx={{fontSize:'1rem'}}
                                 label="Xray File Path"
                                 render={(record) => (
                                     <a
@@ -1196,6 +1205,7 @@ export const PatientShow = (props) => {
                             />
                             {/* <TextField source="intraoralscanFilePath" /> */}
                             <FunctionField
+                                sx={{fontSize:'1rem'}}
                                 label="Intraoralscan File Path"
                                 render={(record) => (
                                     <a
