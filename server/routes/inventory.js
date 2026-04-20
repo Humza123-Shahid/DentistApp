@@ -2,6 +2,51 @@ const express = require('express')
 const router = express.Router()
 const Inventory = require('../models/Inventory')
 
+const itemNames = [
+  'Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Headphones',
+  'Webcam', 'USB Hub', 'Desk Lamp', 'Notebook', 'Pen',
+  'Stapler', 'Printer', 'Scanner', 'Cable', 'Chair',
+  'Desk', 'Whiteboard', 'Marker', 'Eraser', 'Folder',
+];
+
+const descriptions = [
+  'High quality product suitable for everyday use.',
+  'Durable and reliable, built to last.',
+  'Lightweight design with premium finish.',
+  'Energy-efficient and eco-friendly.',
+  'Best-seller with excellent customer reviews.',
+];
+
+const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomFloat = (min, max) => parseFloat((Math.random() * (max - min) + min).toFixed(2));
+
+// --- Main Seeder ---
+router.post('/addbulkinventory',async (req,res)=>{
+  try {
+    let success = false;
+  
+  const records = [];
+
+  for (let i = 0; i < 1000; i++) {
+    records.push({
+      name:        `${getRandom(itemNames)} ${getRandomInt(1, 999)}`,
+      quantity:    getRandomInt(1, 500),
+      description: getRandom(descriptions),
+      costPerUnit: getRandomFloat(1.99, 999.99),
+    });
+  }
+
+  await Inventory.insertMany(records);
+  console.log('✅ 1000 inventory records inserted successfully!');
+
+  success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error inserting inventory:', err);
+  }
+ 
+})
 router.get('/fetchallinventories', async (req, res) => {
     
     // const inventories=await Inventory.find({});

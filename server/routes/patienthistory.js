@@ -2,7 +2,56 @@ const express=require('express');
 const router= express.Router();
 const uploadpatienthistory = require("../middleware/uploadpatienthistory");
 const PatientHistory = require('../models/PatientHistory');
+const Patient = require('../models/Patient');
 
+
+const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const chronicConditionsList = [
+  'Hypertension', 'Diabetes Type 1', 'Diabetes Type 2',
+  'Heart Disease', 'Asthma', 'Osteoporosis', 'None', 'None', 'None', // weighted towards None
+];
+
+const cavitiesList   = ['None', '1', '2', '3', 'Multiple', 'Severe decay'];
+const crownsList     = ['None', '1 crown', '2 crowns', '3 crowns', 'Full mouth restoration'];
+const fillingsList   = ['None', '1 filling', '2 fillings', '3 fillings', 'Composite', 'Amalgam'];
+
+const randomFilePath = (type) =>
+  `/uploads/${type}/${Math.random().toString(36).substring(2, 10)}.${type === 'xray' ? 'jpg' : 'stl'}`;
+
+// --- Seed Function ---
+router.post('/addbulkpatienthistory',async (req,res)=>{
+  try {
+     let success = false;
+        const patientIds = await Patient.find().select("_id");
+     if (patientIds.length === 0) {
+      console.log("Patients not found. Insert it first.");
+      return;
+    }
+
+  const records = [];
+
+  for (let i = 0; i < 1000; i++) {
+    records.push({
+      patient: randomItem(patientIds),           // random ObjectId
+      chronicConditions: randomItem(chronicConditionsList),
+      cavaties: randomItem(cavitiesList),
+      crowns: randomItem(crownsList),
+      fillings: randomItem(fillingsList),
+      xrayFilePath: Math.random() > 0.3 ? randomFilePath('xray') : null,
+      intraoralscanFilePath: Math.random() > 0.5 ? randomFilePath('scan') : null,
+    });
+  }
+
+  await PatientHistory.insertMany(records);
+  console.log('✅ Successfully inserted 1000 PatientHistory records');
+
+  success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error inserting PatientHistory:', err);
+  }
+})
 
 router.get('/fetchallpatienthistories', async (req, res) => {
     

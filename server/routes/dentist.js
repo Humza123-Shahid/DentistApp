@@ -1,7 +1,63 @@
 const express = require('express')
 const router = express.Router()
 const Dentist = require('../models/Dentist')
+const firstNames = {
+  male:   ['James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Ahmed'],
+  female: ['Mary', 'Patricia', 'Jennifer', 'Linda', 'Barbara', 'Susan', 'Jessica', 'Sarah', 'Karen', 'Fatima'],
+  other:  ['Alex', 'Jordan', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Jamie', 'Avery', 'Quinn', 'Skyler']
+};
 
+const lastNames = [
+  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller',
+  'Davis', 'Wilson', 'Khan', 'Ali', 'Ahmed', 'Hassan', 'Malik', 'Chaudhry'
+];
+
+const specializations = [
+  'General Dentistry', 'Orthodontics', 'Periodontics', 'Endodontics',
+  'Oral Surgery', 'Pediatric Dentistry', 'Prosthodontics', 'Cosmetic Dentistry'
+];
+
+const genders = ['male', 'female', 'other'];
+
+function getRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateContact() {
+  // Generates a random PK-style number e.g. 03XX-XXXXXXX
+  const prefix = ['0300', '0301', '0302', '0303', '0311', '0321', '0331', '0341'];
+  const number = Math.floor(Math.random() * 9000000) + 1000000;
+  return `${getRandom(prefix)}-${number}`;
+}
+
+router.post('/addbulkdentist',async (req,res)=>{
+  try {
+let success = false;
+    const dentists = [];
+
+    for (let i = 0; i < 1000; i++) {
+      const gender  = getRandom(genders);
+      const firstName = getRandom(firstNames[gender]);
+      const lastName  = getRandom(lastNames);
+
+      dentists.push({
+        name:            `${firstName} ${lastName}`,
+        salary:          Math.floor(Math.random() * 150000) + 50000,   // 50,000 – 200,000
+        contact:         generateContact(),
+        specialization:  getRandom(specializations),
+        experienceLevel: Math.floor(Math.random() * 30) + 1,           // 1 – 30 years
+        gender
+      });
+    }
+
+    await Dentist.insertMany(dentists);
+    console.log('✅ 1000 dentist records inserted successfully!');
+success=true;
+    res.json({success})
+  } catch (error) {
+    console.error('❌ Error seeding data:', error);
+  } 
+})
 router.get('/fetchalldentists', async (req, res) => {
     
     // const dentists=await Dentist.find({});

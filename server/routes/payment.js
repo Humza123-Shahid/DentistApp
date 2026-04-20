@@ -1,7 +1,70 @@
 const express = require('express')
 const router = express.Router()
 const Payment = require('../models/Payment')
+const Appointment = require('../models/Appointment')
+const Patient = require('../models/Patient');
+const Dentist = require('../models/Dentist');
 
+
+const paymentMethods = ['Cash', 'Credit Card', 'Debit Card', 'Insurance', 'Bank Transfer', 'Online'];
+const paymentTypes = ['Procedure Payment', 'Deposit', 'Refund', 'Prepayment'];
+const notesSamples = [
+  'Payment received in full',
+  'Partial payment - balance pending',
+  'Insurance co-pay collected',
+  'Refund issued for cancelled appointment',
+  'Deposit for upcoming procedure',
+  'Payment plan installment',
+  'Emergency procedure payment',
+  null,
+];
+
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+router.post('/addbulkpayment',async (req,res)=>{
+  try {
+     let success = false;
+    const patientIds = await Patient.find().select("_id");
+        const providerIds = await Dentist.find().select("_id");
+     const appointmentIds = await Appointment.find().select("_id");
+        if (patientIds.length === 0 || providerIds.length === 0 || appointmentIds.length === 0) {
+          console.log("Patients or Dentist or appointment not found. Insert them first.");
+          return;
+        }
+
+  const payments = [];
+
+  for (let i = 0; i < 1000; i++) {
+    const totalAmount = parseFloat((Math.random() * 2000 + 50).toFixed(2));   // $50 - $2050
+    const amount = parseFloat((Math.random() * totalAmount).toFixed(2));       // partial or full
+
+    payments.push({
+      patientId: randomFrom(patientIds),
+      providerId: randomFrom(providerIds),
+      appointmentId: randomFrom(appointmentIds),
+      paymentDate: randomDate(new Date('2023-01-01'), new Date()),
+      paymentMethod: randomFrom(paymentMethods),
+      paymentType: randomFrom(paymentTypes),
+      totalAmount,
+      amount,
+      notes: randomFrom(notesSamples),
+    });
+  }
+
+  await Payment.insertMany(payments);
+  console.log('✅ 1000 payment records inserted successfully');
+    success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error inserting Payment:', err);
+  }
+})
 router.get('/fetchallpayments', async (req, res) => {
     
     // const payments=await Payment.find({});

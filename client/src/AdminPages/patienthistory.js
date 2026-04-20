@@ -44,13 +44,12 @@ const sequentialId = (record, source, index) => {
     return index + 1; // Simplest version (resets per page)
 };
 export const PatientHistoryList = () => {
-
-
     return (
-        <List title="PatientHistory">
-            <Datagrid rowClick="show">
+<List title="PatientHistory" >
+   
+            <Datagrid rowClick="show"> 
 
-                {/* <TextField  source="id" /> */}
+                 {/* <TextField  source="id" /> */}
                 <TextField source="index" label="#" />
                 <ReferenceField source="patient" reference="patient">
                     <TextField source="name" />
@@ -63,7 +62,9 @@ export const PatientHistoryList = () => {
                 <TextField source="intraoralscanFilePath" />
 
             </Datagrid >
-        </List>)
+            
+         </List>)
+    
 };
 export const PatientHistoryShow = (props) => (
     <Show {...props} title="View PatientHistory">

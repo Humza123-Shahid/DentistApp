@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Show, SimpleShowLayout, Datagrid, ReferenceManyField, useShowContext, useListContext, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, useRecordContext, required } from 'react-admin';
+import { useSelector } from 'react-redux';
 
 const PROCEDURES = [
     { id: "filling", label: "Filling", color: "#3b82f6", symbol: "F" },
@@ -150,7 +151,7 @@ function ToothSVG({ toothNum, procedures, selected, onClick, activeTool }) {
                 alignItems: "center",
                 justifyContent: "center",
                 transition: "all 0.15s ease",
-                boxShadow: selected
+                divShadow: selected
                     ? "0 0 0 2px #38bdf8, 0 0 12px #38bdf855"
                     : hasProcs
                         ? "0 2px 8px #00000055"
@@ -384,7 +385,7 @@ export default function TeethMap() {
             //         const existingValue = prev[key] || []; // Or [] if appending to an array
             //         return {
             //           ...prev,
-            //           [key]: existingValue + value 
+            //           [key]: existingValue + value
             //         };
             //       });
             //     });
@@ -434,26 +435,37 @@ export default function TeethMap() {
         }));
 
         const response = await fetch(`http://localhost:5000/api/tooth/addtoothbyadmin/${patient_id}`, {
-           
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formattedData),
-            
+
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formattedData),
+
         })
         const json = await response.json();
-        if(response.ok)
-        {
+        if (response.ok) {
             alert("Patient Tooth data saved successfully!!")
         }
 
     };
     const totalProcedures = Object.values(procedures).flat().length;
     const affectedTeeth = Object.keys(procedures).length;
+    // const isSidebarOpen = useSelector(state => state.admin.ui.sidebarOpen);
 
+    // useEffect(() => {
+    //     if (isSidebarOpen) {
+    //         // Prevent scrolling on mobile when sidebar is out
+    //         document.body.style.overflow = 'hidden';
+    //     } else {
+    //         // Restore scrolling
+    //         document.body.style.overflow = 'unset';
+    //     }
+    // }, [isSidebarOpen]);
     return (
         <div
             style={{
-                minHeight: "100vh",
+                // minHeight: "100vh",
+                display:'flex',
+                minHeight: "fit-content",
                 background: "#060b14",
                 color: "#e2e8f0",
                 fontFamily: "'Syne', 'Segoe UI', sans-serif",
@@ -465,7 +477,7 @@ export default function TeethMap() {
             {/* Google Font */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        * { box-sizing: border-box; }
+        * { div-sizing: border-div; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
@@ -733,7 +745,7 @@ export default function TeethMap() {
                                 ))}
                             </div>
 
-                            {/* Divider */}
+                            {/* divider */}
                             <div
                                 style={{
                                     height: 1,
@@ -1058,7 +1070,7 @@ export default function TeethMap() {
 // );
 const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
     const { data, isLoading } = useListContext();
-    let totalDue=0;
+    let totalDue = 0;
     if (isLoading) return <span>Loading...</span>;
     if (!data || data.length === 0) return <span style={{
         padding: "14px",
@@ -1093,45 +1105,45 @@ const AggregatedPaymentSummary = ({ totalAmountSource = 'total_amount' }) => {
                 </tr>
             </thead>
             <tbody>
-                {rows.map((row, index,array) => {
+                {rows.map((row, index, array) => {
                     const due = row.totalAmount - row.paidSum;
-                    totalDue=+due;
-                    return(
-                    <>
-                    {index === array.length - 1 ? 
-                        
+                    totalDue = +due;
+                    return (
                         <>
-                        <tr key={row.appointmentId}>
-                            <td style={td}>{index + 1}</td>
-                            <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
-                            <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
-                            <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
-                                Rs {due.toFixed(2)}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={td}>Total Due Amount</td>
-                            <td style={td}></td>
-                            <td style={td}></td>
-                            <td style={{ ...td, color: totalDue > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
-                                Rs {totalDue.toFixed(2)}
-                            </td>
-                        </tr>
-                        </>
-                    
-     : 
-    
-                        <tr key={row.appointmentId}>
-                            <td style={td}>{index + 1}</td>
-                            <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
-                            <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
-                            <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
-                                Rs {due.toFixed(2)}
-                            </td>
-                        </tr>
-                    
-    }
-                   </>)
+                            {index === array.length - 1 ?
+
+                                <>
+                                    <tr key={row.appointmentId}>
+                                        <td style={td}>{index + 1}</td>
+                                        <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
+                                        <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
+                                        <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
+                                            Rs {due.toFixed(2)}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={td}>Total Due Amount</td>
+                                        <td style={td}></td>
+                                        <td style={td}></td>
+                                        <td style={{ ...td, color: totalDue > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
+                                            Rs {totalDue.toFixed(2)}
+                                        </td>
+                                    </tr>
+                                </>
+
+                                :
+
+                                <tr key={row.appointmentId}>
+                                    <td style={td}>{index + 1}</td>
+                                    <td style={td}>Rs {row.totalAmount.toFixed(2)}</td>
+                                    <td style={td}>Rs {row.paidSum.toFixed(2)}</td>
+                                    <td style={{ ...td, color: due > 0 ? 'red' : 'green', fontWeight: 'bold' }}>
+                                        Rs {due.toFixed(2)}
+                                    </td>
+                                </tr>
+
+                            }
+                        </>)
                 })}
             </tbody>
         </table>
@@ -1163,9 +1175,10 @@ export const PatientShow = (props) => {
                 </SimpleShowLayout>
             </Show>
             <Show title={false} actions={false} sx={{ mb: 3 }}>
-                <TeethMap />
-            </Show>
-
+                <SimpleShowLayout> 
+            <TeethMap /> 
+            </SimpleShowLayout>
+            </Show> 
             <Show title={false} actions={false} >
                 <SimpleShowLayout sx={{
                     marginTop: '0em'
@@ -1177,21 +1190,21 @@ export const PatientShow = (props) => {
                     >
 
                         <Datagrid bulkActionButtons={false} rowClick={false} sx={{
-    '& .RaDatagrid-headerCell': {
-        backgroundColor: '#f5f5f5',
-        fontWeight:'bolder',
-        fontSize:'1rem',
-        borderBottom: '2px solid #ddd'
-    },
-    // '& .RaDatagrid-rowCell': {  fontSize:'1rem' }, 
-}}>
-                            <TextField sx={{fontSize:'1rem'}} source="chronicConditions" />
-                            <TextField sx={{fontSize:'1rem'}} source="cavaties" />
-                            <TextField sx={{fontSize:'1rem'}} source="crowns" />
-                            <TextField sx={{fontSize:'1rem'}} source="fillings" />
+                            '& .RaDatagrid-headerCell': {
+                                backgroundColor: '#f5f5f5',
+                                fontWeight: 'bolder',
+                                fontSize: '1rem',
+                                borderBottom: '2px solid #ddd'
+                            },
+                            // '& .RaDatagrid-rowCell': {  fontSize:'1rem' }, 
+                        }}>
+                            <TextField sx={{ fontSize: '1rem' }} source="chronicConditions" />
+                            <TextField sx={{ fontSize: '1rem' }} source="cavaties" />
+                            <TextField sx={{ fontSize: '1rem' }} source="crowns" />
+                            <TextField sx={{ fontSize: '1rem' }} source="fillings" />
                             {/* <TextField source="xrayFilePath" /> */}
                             <FunctionField
-                                sx={{fontSize:'1rem'}}
+                                sx={{ fontSize: '1rem' }}
                                 label="Xray File Path"
                                 render={(record) => (
                                     <a
@@ -1205,7 +1218,7 @@ export const PatientShow = (props) => {
                             />
                             {/* <TextField source="intraoralscanFilePath" /> */}
                             <FunctionField
-                                sx={{fontSize:'1rem'}}
+                                sx={{ fontSize: '1rem' }}
                                 label="Intraoralscan File Path"
                                 render={(record) => (
                                     <a

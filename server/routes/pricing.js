@@ -1,7 +1,41 @@
 const express = require('express')
 const router = express.Router()
 const Pricing = require('../models/Pricing')
+const Procedure = require('../models/Procedure')
 
+function randomDate(start, end) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+// --- Seed Function ---
+router.post('/addbulkpricing',async (req,res)=>{
+  try {
+     let success = false;
+     const procedureIds = await Procedure.find().select("_id");
+   
+
+    const records = [];
+
+    for (let i = 0; i < 1000; i++) {
+      records.push({
+        procedure: randomFrom(procedureIds), // random ObjectId (or use real ones from DB)
+        fee: parseFloat((Math.random() * 990 + 10).toFixed(2)), // fee between 10.00 and 1000.00
+        effectiveDate: randomDate(new Date('2020-01-01'), new Date()),
+      });
+    }
+
+    await Pricing.insertMany(records);
+    console.log('✅ 1000 Pricing records inserted successfully');
+ success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error seeding data:', err);
+  } 
+});
 router.get('/fetchallpricings', async (req, res) => {
     
     // const pricings=await Pricing.find({});

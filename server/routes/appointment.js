@@ -1,7 +1,69 @@
 const express = require('express')
 const router = express.Router()
 const Appointment = require('../models/Appointment')
+const Patient = require('../models/Patient');
+const Dentist = require('../models/Dentist');
 
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+function randomTime() {
+  const hours = Math.floor(Math.random() * 9) + 8; // 8 AM - 4 PM
+  const minutes = [0, 15, 30, 45][Math.floor(Math.random() * 4)];
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+function randomElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// --- Seed Data ---
+
+const treatmentTypes = ['Checkup', 'Cleaning', 'Root Canal', 'Filling', 'Extraction', 'Whitening'];
+const statuses      = ['Scheduled', 'In Progress', 'Completed', 'Cancelled', 'Rescheduled'];
+const durations     = [15, 30, 45, 60, 90, 120];
+
+// Replace these with real ObjectIds from your DB, or generate random ones for testing
+// const patientIds = (await Patient.find({}, '_id')).map(p => p._id);
+// const dentistIds = (await Dentist.find({}, '_id')).map(d => d._id);
+
+// --- Generate & Insert ---
+router.post('/addbulkappointment',async (req,res)=>{
+  try {
+    let success = false;
+    const patientIds = await Patient.find().select("_id");
+    const dentistIds = await Dentist.find().select("_id");
+
+    if (patientIds.length === 0 || dentistIds.length === 0) {
+      console.log("Patients or Dentist not found. Insert them first.");
+      return;
+    }
+
+    const appointments = [];
+
+    for (let i = 0; i < 1000; i++) {
+      appointments.push({
+        patient:          randomElement(patientIds),
+        dentist:          randomElement(dentistIds),
+        appointmentDate:  randomDate(new Date('2024-01-01'), new Date('2025-12-31')),
+        appointmentTime:  randomTime(),
+        durationMinutes:  randomElement(durations),
+        treatmentType:    randomElement(treatmentTypes),
+        status:           randomElement(statuses),
+      });
+    }
+
+    await Appointment.insertMany(appointments);
+    console.log('✅ 1000 appointments inserted successfully!');
+success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error inserting appointments:', err);
+  }
+})
 router.get('/fetchallappointments', async (req, res) => {
     
     // const appointments=await Appointment.find({});

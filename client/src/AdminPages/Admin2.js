@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Admin, Resource,fetchUtils  } from 'react-admin';
+import { Admin, Resource,fetchUtils,defaultTheme,Sidebar, Layout  } from 'react-admin';
 // import jsonServerProvider from 'ra-data-json-server';
 import { ProcedureCreate,ProcedureList,ProcedureShow,ProcedureEdit} from './procedure';
 import { PricingCreate,PricingList,PricingShow,PricingEdit} from './pricing';
@@ -11,6 +11,8 @@ import { PatientHistoryCreate,PatientHistoryList,PatientHistoryShow,PatientHisto
 import { AppointmentCreate,AppointmentList,AppointmentShow,AppointmentEdit} from './appointment';
 import { PaymentCreate,PaymentList,PaymentShow,PaymentEdit} from './payment';
 import { ToothCreate,ToothList,ToothShow,ToothEdit} from './tooth';
+// import { MyLayout } from './MyLayout';
+// import { MyLayout } from './MySidebar';
 
 // let data = {
 //   procedure: [
@@ -353,8 +355,56 @@ const dataProvider1 = {
   //   });
   // }
 };
+const MySidebar = (props) => (
+  <Sidebar
+    {...props}
+    sx={{
+      // Target the actual MUI Drawer paper inside the sidebar
+      '& .RaSidebar-drawerPaper': {
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
+        overflowY: 'auto',
+        alignSelf: 'flex-start',  // ← key: lets sticky work inside a flex row
+      },
+    }}
+  />
+);
+
+
 const Admin2 = (props) => {
- 
+const MyLayout = (props) => (
+  <Layout
+    {...props}
+    sx={{
+      '& .RaLayout-content': {
+        overflowX: 'hidden',
+        minWidth: 0,
+        width: '100%',
+      },
+      '& .RaLayout-appFrame': {
+        overflowX: 'hidden',
+      },
+    }}
+  />
+);
+//  const theme = createTheme({
+//   components: {
+//     RaLayout: {
+//       styleOverrides: {
+//         root: {
+//           '& .RaLayout-content': {
+//             overflow: 'hidden',
+//             minWidth: 0,
+//           },
+//           '& .RaLayout-appFrame': {
+//             overflowX: 'hidden',
+//           },
+//         },
+//       },
+//     },
+//   },
+// });
   return (
     <Admin basename="/admin"  dataProvider={dataProvider1}>
          {/* <Resource name="dentist" options={{ label: 'People' }} list={ProcedureList} create={ProcedureCreate} show={ProcedureShow} edit={ProcedureEdit} /> */}

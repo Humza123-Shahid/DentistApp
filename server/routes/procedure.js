@@ -1,7 +1,111 @@
 const express = require('express')
 const router = express.Router()
 const Procedure = require('../models/Procedure')
+const categories = ['Endodontics', 'Prosthodontics', 'Periodontics', 'Orthodontics', 'Oral Surgery'];
 
+const proceduresByCategory = {
+  Endodontics: [
+    { name: 'Root Canal Therapy',         base: 'RCT' },
+    { name: 'Pulpotomy',                  base: 'PLP' },
+    { name: 'Pulpectomy',                 base: 'PLC' },
+    { name: 'Apexification',              base: 'APX' },
+    { name: 'Endodontic Retreatment',     base: 'ERX' },
+    { name: 'Apicoectomy',                base: 'APC' },
+  ],
+  Prosthodontics: [
+    { name: 'Full Crown Placement',       base: 'FCP' },
+    { name: 'Dental Bridge',              base: 'DBR' },
+    { name: 'Complete Denture',           base: 'CDN' },
+    { name: 'Partial Denture',            base: 'PDN' },
+    { name: 'Veneer Application',         base: 'VNR' },
+    { name: 'Implant Crown',              base: 'ICR' },
+  ],
+  Periodontics: [
+    { name: 'Scaling & Root Planing',     base: 'SRP' },
+    { name: 'Gingivectomy',               base: 'GVX' },
+    { name: 'Osseous Surgery',            base: 'OSS' },
+    { name: 'Gingival Graft',             base: 'GGF' },
+    { name: 'Periodontal Maintenance',    base: 'PMT' },
+    { name: 'Bone Grafting',              base: 'BGF' },
+  ],
+  Orthodontics: [
+    { name: 'Braces Placement',           base: 'BRP' },
+    { name: 'Aligner Therapy',            base: 'ALT' },
+    { name: 'Retainer Fitting',           base: 'RTF' },
+    { name: 'Space Maintainer',           base: 'SPM' },
+    { name: 'Palatal Expander',           base: 'PLX' },
+    { name: 'Debonding',                  base: 'DBN' },
+  ],
+  'Oral Surgery': [
+    { name: 'Tooth Extraction',           base: 'TXT' },
+    { name: 'Wisdom Tooth Removal',       base: 'WTR' },
+    { name: 'Dental Implant Placement',   base: 'DIP' },
+    { name: 'Jaw Surgery',                base: 'JWS' },
+    { name: 'Frenectomy',                 base: 'FRX' },
+    { name: 'Cyst Removal',               base: 'CYR' },
+  ],
+};
+
+const descriptionTemplates = [
+  (name, cat) => `A standard ${cat.toLowerCase()} procedure involving ${name.toLowerCase()} performed under local anaesthesia.`,
+  (name, cat) => `${name} is a routine ${cat.toLowerCase()} treatment aimed at restoring optimal oral health.`,
+  (name, cat) => `This ${cat.toLowerCase()} procedure, ${name.toLowerCase()}, is recommended for patients requiring targeted dental intervention.`,
+  (name, cat) => `${name} falls under ${cat} and is typically completed in one or more clinical visits.`,
+  (name)      => `Comprehensive ${name.toLowerCase()} procedure following evidence-based dental protocols.`,
+];
+
+const durations = [15, 20, 30, 45, 60, 75, 90, 120];
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateCode(base, index) {
+  return `${base}-${String(index).padStart(5, '0')}`;
+}
+
+// ── Generator ────────────────────────────────────────────────────────────────
+
+function generateProcedures(count = 1000) {
+  const procedures = [];
+
+  for (let i = 1; i <= count; i++) {
+    const category  = randomItem(categories);
+    const procedure = randomItem(proceduresByCategory[category]);
+    const template  = randomItem(descriptionTemplates);
+
+    procedures.push({
+      name:            procedure.name,
+      code:            generateCode(procedure.base, i),
+      description:     template(procedure.name, category),
+      category:        category,
+      durationMinutes: randomItem(durations),
+    });
+  }
+
+  return procedures;
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
+
+router.post('/addbulkprocedure',async (req,res)=>{
+  try {
+    
+
+    const procedures = generateProcedures(1000);
+    await Procedure.insertMany(procedures);
+
+    console.log('🎉 Successfully inserted 1000 procedure records');
+    success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error:', err);
+  } 
+})
 router.get('/fetchallprocedures', async (req, res) => {
     
     // const procedures=await Procedure.find({});

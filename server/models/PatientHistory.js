@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Define the Schema
-const PatientHisorySchema = new mongoose.Schema({
+const PatientHistorySchema = new mongoose.Schema({
 
   patient: {    
     type: mongoose.Schema.Types.ObjectId, ref: 'Patient'          
@@ -48,4 +48,4 @@ const PatientHisorySchema = new mongoose.Schema({
 { timestamps: true } 
 );
 
-module.exports = mongoose.model('PatientHisory', PatientHisorySchema);
+module.exports = mongoose.model('PatientHistory', PatientHistorySchema);

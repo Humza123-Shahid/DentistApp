@@ -1,7 +1,70 @@
 const express = require('express')
 const router = express.Router()
 const Expense = require('../models/Expense')
+const CATEGORIES = ['Lab Fees', 'Supplies', 'Rent', 'Utilities'];
 
+const NOTES_BY_CATEGORY = {
+  'Lab Fees':  ['Monthly lab access fee', 'Equipment calibration charge',
+                'Lab technician overtime', 'Lab consumables restock',
+                'Annual lab certification fee'],
+  'Supplies':  ['Office stationery order', 'Printer cartridges',
+                'Cleaning supplies', 'Safety equipment', 'First aid kit restock'],
+  'Rent':      ['Monthly office rent', 'Warehouse space lease',
+                'Parking lot rental', 'Storage unit fee', 'Conference room booking'],
+  'Utilities': ['Electricity bill', 'Water bill', 'Internet service',
+                'Gas bill', 'Waste disposal fee'],
+};
+
+const AMOUNT_RANGE_BY_CATEGORY = {
+  'Lab Fees':  { min: 200,  max: 5000  },
+  'Supplies':  { min: 10,   max: 500   },
+  'Rent':      { min: 1000, max: 15000 },
+  'Utilities': { min: 50,   max: 1500  },
+};
+
+/** Random integer between min and max (inclusive) */
+const randInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+/** Random date within the past 2 years */
+const randDate = () => {
+  const now  = Date.now();
+  const past = now - 2 * 365 * 24 * 60 * 60 * 1000; // 2 years in ms
+  return new Date(past + Math.random() * (now - past));
+};
+
+/** Pick a random element from an array */
+const randItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+// ── Seeder ────────────────────────────────────────────────────────────────────
+router.post('/addbulkexpense',async (req,res)=>{
+  try {
+    let success = false;
+  
+
+  const expenses = [];
+
+  for (let i = 0; i < 1000; i++) {
+    const category = randItem(CATEGORIES);
+    const { min, max } = AMOUNT_RANGE_BY_CATEGORY[category];
+
+    expenses.push({
+      expenseDate: randDate(),
+      category,
+      amount: parseFloat((Math.random() * (max - min) + min).toFixed(2)),
+      notes:  randItem(NOTES_BY_CATEGORY[category]),
+    });
+  }
+
+  await Expense.insertMany(expenses);
+  console.log('✅ 1000 expense records inserted successfully');
+success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error inserting expenses:', err);
+  }
+ 
+})
 router.get('/fetchallexpenses', async (req, res) => {
     
     // const expenses=await Expense.find({});

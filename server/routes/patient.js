@@ -1,7 +1,86 @@
 const express = require('express')
 const router = express.Router()
 const Patient = require('../models/Patient')
+const firstNames = [
+  'Ali', 'Sara', 'Ahmed', 'Fatima', 'Omar', 'Ayesha', 'Hassan', 'Zara',
+  'James', 'Emily', 'Michael', 'Sophia', 'David', 'Olivia', 'Daniel', 'Emma',
+  'Liam', 'Mia', 'Noah', 'Isabella', 'Lucas', 'Amelia', 'Ethan', 'Ava',
+  'Muhammad', 'Nadia', 'Tariq', 'Hina', 'Bilal', 'Sana'
+];
 
+const lastNames = [
+  'Khan', 'Ahmed', 'Ali', 'Sheikh', 'Malik', 'Hussain', 'Iqbal', 'Butt',
+  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller',
+  'Davis', 'Wilson', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White',
+  'Harris', 'Martin', 'Thompson', 'Lee', 'Walker', 'Hall', 'Allen', 'Young'
+];
+
+const cities = [
+  'Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Peshawar',
+  'New York', 'London', 'Dubai', 'Toronto', 'Sydney',
+  'Berlin', 'Paris', 'Istanbul', 'Cairo', 'Riyadh'
+];
+
+const nationalities = [
+  'Pakistani', 'American', 'British', 'Canadian', 'Australian',
+  'German', 'French', 'Turkish', 'Egyptian', 'Saudi Arabian',
+  'Indian', 'Bangladeshi', 'Afghan', 'Iranian', 'Emirati'
+];
+
+const genders = ['male', 'female', 'other'];
+
+// --- Helper Functions ---
+const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+const getRandomDate = (startYear, endYear) => {
+  const start = new Date(`${startYear}-01-01`);
+  const end = new Date(`${endYear}-12-31`);
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+};
+
+const generateContact = () => {
+  const prefix = getRandom(['03', '92', '+1', '+44', '+971']);
+  return `${prefix}${getRandomInt(1000000, 9999999)}`;
+};
+router.post('/addbulkpatient',async (req,res)=>{
+  try {
+    let success = false;
+
+    // Optional: clear existing records
+    // await Patient.deleteMany({});
+
+    const patients = [];
+
+    for (let i = 0; i < 1000; i++) {
+      const firstName = getRandom(firstNames);
+      const lastName = getRandom(lastNames);
+      const gender = getRandom(genders);
+      const dob = getRandomDate(1950, 2005);
+      const age = new Date().getFullYear() - dob.getFullYear();
+      const city = getRandom(cities);
+
+      patients.push({
+        name: `${firstName} ${lastName}`,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`,
+        address: `${getRandomInt(1, 999)} Street ${getRandomInt(1, 50)}, ${city}`,
+        contact: generateContact(),
+        dateOfBirth: dob,
+        age: age,
+        gender: gender,
+        nationality: getRandom(nationalities)
+      });
+    }
+
+    await Patient.insertMany(patients);
+    console.log('🎉 1000 patient records inserted successfully!');
+success=true;
+    res.json({success})
+  } catch (error) {
+    console.error('❌ Error:', error.message);
+  }
+});
 router.get('/fetchallpatients', async (req, res) => {
     
     // const patients=await Patient.find({});
