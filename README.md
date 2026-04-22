@@ -12,6 +12,7 @@ You'll need the following installed on your system:
 `MongoDB` (running locally or a connection string for a cloud service like MongoDB Atlas)
 
 Installation
+
 Clone the repository:
 
 git clone https://github.com/Humza123-Shahid/DentistApp.git cd DentistApp
@@ -21,16 +22,19 @@ Install dependencies for both the client (frontend) and the server (backend) and
 Root:
 
 cd EvenTo
+
 npm install
 
 Backend (Server):
 
 cd server
+
 npm install
 
 Frontend (Client):
 
 cd ../client 
+
 npm install
 
 ⚙️ Configuration
@@ -49,12 +53,17 @@ const mongoURI="your_mongodb_connection_string_here" also add 'dentistapp' at th
 1. Start the Backend Server Navigate to the server directory and run nodemon script:
 
 cd server
+
 nodemon ./index.js
+
 The server should start running at the port specified in your index.js file (e.g., http://localhost:5000).
+
 2. Start the Frontend Client Open a new terminal window, navigate to the client directory, and run the start script:
 
 cd ../client
+
 npm start
+
 The client should open automatically in your browser (usually at http://localhost:3000).
 
 The application is now fully running!
@@ -65,7 +74,9 @@ Start both Client and Server
 Navigate to root directory and run the both script:
 
 cd EvenTo
+
 npm run both
+
 The server should start running at the port specified in your index file (e.g., http://localhost:5000).
 AND
 The client should open automatically in your browser (usually at http://localhost:3000).
