@@ -13,7 +13,7 @@
     "ra-data-json-server": "^5.14.4",
     "ra-data-simple-rest": "^5.14.4",
     "react": "^19.2.4",
-    "react-admin": "^5.14.4",
+    "react-admin": "^5.14.6",
     "react-dom": "^19.2.4",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.2",

@@ -67,11 +67,14 @@ router.get('/fetchallpatienthistories', async (req, res) => {
 
   const patienthistories = await PatientHistory.find(filter)
     .skip((page - 1) * perPage)
-    .limit(perPage);
+    .limit(perPage)
+    //.lean();
 
   const total = await PatientHistory.countDocuments(filter);
 
-  res.json({ data: patienthistories, total });
+   res.json({ data: patienthistories, total });
+  //const data = patienthistories.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+  //res.json({ data, total });
 })
 router.get('/fetchmanypatienthistories', async (req, res) => {
     
@@ -82,9 +85,11 @@ router.get('/fetchmanypatienthistories', async (req, res) => {
     if (ids) {
       const patienthistories = await PatientHistory.find({
         _id: { $in: ids }
-      });
+      })
+      //.lean();
 
-      return res.json(patienthistories);
+       return res.json(patienthistories);
+       //return res.json(patienthistories.map(({ _id, ...rest }) => ({ id: _id, ...rest })));
     }
 
     // fallback → normal getList

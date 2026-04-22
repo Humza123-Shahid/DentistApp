@@ -79,11 +79,14 @@ let filter = {};
 
   const payments = await Payment.find(filter)
     .skip((page - 1) * perPage)
-    .limit(perPage);
+    .limit(perPage)
+    //.lean();
 
   const total = await Payment.countDocuments(filter);
 
   res.json({ data: payments, total });
+  //const data = payments.map(({ _id, ...rest }) => ({ id: _id.toString(), ...rest }));
+    //res.json({ data, total });
 })
 router.get('/fetchmanypayments', async (req, res) => {
     
@@ -94,9 +97,11 @@ router.get('/fetchmanypayments', async (req, res) => {
     if (ids) {
       const payments = await Payment.find({
         _id: { $in: ids }
-      });
+      })
+      //.lean();
 
-      return res.json(payments);
+       return res.json(payments);
+       //return res.json(payments.map(({ _id, ...rest }) => ({ id: _id.toString(), ...rest })));
     }
 
     // fallback → normal getList

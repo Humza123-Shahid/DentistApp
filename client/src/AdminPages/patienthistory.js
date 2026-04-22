@@ -1,8 +1,35 @@
 // in src/posts.js
 import * as React from 'react';
 import { useEffect } from 'react';
-import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput,FileInput,FileField, required } from 'react-admin';
+import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField, TextField,useGetMany, useListContext,useRecordContext, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput,FileInput,FileField, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
+import { useCallback,useMemo } from 'react';
+
+const StableReferenceField = ({ source, reference, displayField }) => {
+    const { data: listData = [] } = useListContext();
+
+    // Stable memoized IDs — won't change reference on re-renders
+    const ids = useMemo(
+        () => [...new Set(listData.map(r => r[source]).filter(Boolean))],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [listData.length, source]  // ← depend on length, not array ref
+    );
+
+    const { data: refData = [] } = useGetMany(
+        reference,
+        { ids },
+        { enabled: ids.length > 0, staleTime: Infinity }
+    );
+
+    // Build a lookup map
+    const map = useMemo(
+        () => Object.fromEntries(refData.map(r => [r.id, r])),
+        [refData]
+    );
+
+    const record = useRecordContext();
+    return <span>{map[record?.[source]]?.[displayField] ?? '—'}</span>;
+};
 const genderChoices = [
     { id: 'male', name: 'Male' },
     { id: 'female', name: 'Female' },
@@ -51,9 +78,14 @@ export const PatientHistoryList = () => {
 
                  {/* <TextField  source="id" /> */}
                 <TextField source="index" label="#" />
-                <ReferenceField source="patient" reference="patient">
+                {/* <ReferenceField source="patient" reference="patient">
                     <TextField source="name" />
-                </ReferenceField >
+                </ReferenceField > */}
+                 <StableReferenceField
+                    source="patient"
+                    reference="patient"
+                    displayField="name"
+                />
                 <TextField source="chronicConditions" />
                 <TextField source="cavaties" />
                 <TextField source="crowns" />

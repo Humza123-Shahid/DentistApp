@@ -1,7 +1,59 @@
 const express = require('express')
 const Tooth = require('../models/Tooth')
-
+const Patient = require('../models/Patient');
 const router = express.Router();
+
+const procedureTypes = ['Filling', 'Crown', 'Root Canal', 'Extraction', 'Implant', 'Veneer', 'Bridge', 'Cleaning'];
+const statuses = ['Completed', 'Planned', 'Existing'];
+
+function randomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+function generateRandomProcedures() {
+  const count = Math.floor(Math.random() * 4) + 1; // 1 to 4 procedures
+  const procedures = [];
+  for (let j = 0; j < count; j++) {
+    procedures.push({
+      procedureType: randomItem(procedureTypes),
+      date: randomDate(new Date('2020-01-01'), new Date()),
+      status: randomItem(statuses)
+    });
+  }
+  return procedures;
+}
+
+router.post('/addbulktooth',async (req,res)=>{
+  try {
+    let success = false;
+  const patientIds = await Patient.find().select("_id");
+if (patientIds.length === 0 ) {
+          console.log("Patients not found. Insert them first.");
+          return;
+        }
+  const teeth = [];
+
+  for (let i = 0; i < 1000; i++) {
+    teeth.push({
+      patient: randomItem(patientIds), // random patient ID
+      toothNumber: Math.floor(Math.random() * 32) + 1, // 1–32 (Universal)
+      procedures: generateRandomProcedures()
+    });
+  }
+
+  await Tooth.insertMany(teeth);
+  console.log('✅ 1000 tooth records inserted successfully');
+
+  success=true;
+    res.json({success})
+  } catch (err) {
+    console.error('❌ Error:', err);
+  } 
+})
 router.get("/fetchalltooths", async (req, res) => {
 
     let filter = {};
@@ -14,11 +66,14 @@ router.get("/fetchalltooths", async (req, res) => {
     
       const tooths = await Tooth.find(filter)
         .skip((page - 1) * perPage)
-        .limit(perPage);
+        .limit(perPage)
+        //.lean();
     
       const total = await Tooth.countDocuments(filter);
     
-      res.json({ data: tooths, total });
+       res.json({ data: tooths, total });
+      //const data = tooths.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+    //res.json({ data, total });
       })
 router.get('/fetchmanytooths', async (req, res) => {
     
@@ -29,9 +84,11 @@ router.get('/fetchmanytooths', async (req, res) => {
     if (ids) {
       const tooths = await Tooth.find({
         _id: { $in: ids }
-      });
+      })
+      // .lean();
 
-      return res.json(tooths);
+       return res.json(tooths);
+      //return res.json(tooths.map(({ _id, ...rest }) => ({ id: _id, ...rest })));
     }
 
     // fallback → normal getList

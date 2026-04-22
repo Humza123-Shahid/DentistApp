@@ -76,13 +76,25 @@ let filter = {};
   const page = parseInt(req.query.pagination ? JSON.parse(req.query.pagination).page : 1);
   const perPage = parseInt(req.query.pagination ? JSON.parse(req.query.pagination).perPage : 25);
 
+//  const sortParam = req.query.sort ? JSON.parse(req.query.sort) : {};
+//     const sortField = sortParam.field || 'createdAt';
+//     const sortOrder = sortParam.order === 'DESC' ? -1 : 1;
+//     const sort = { [sortField]: sortOrder };
   const appointments = await Appointment.find(filter)
+  // .sort(sort)
     .skip((page - 1) * perPage)
-    .limit(perPage);
+    .limit(perPage)
+    //.lean();
 
   const total = await Appointment.countDocuments(filter);
+//const data = appointments.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+   res.json({ data: appointments, total });
+//    const data = appointments.map(item => ({
+//   ...item.toObject(), // important if not using .lean()
+//   id: item._id
+// }));
+    //res.json({ data, total });
 
-  res.json({ data: appointments, total });
 })
 router.get('/fetchmanyappointments', async (req, res) => {
     
@@ -93,9 +105,17 @@ router.get('/fetchmanyappointments', async (req, res) => {
     if (ids) {
       const appointments = await Appointment.find({
         _id: { $in: ids }
-      });
+      })
+      //.lean();
 
-      return res.json(appointments);
+       return res.json(appointments);
+//        return res.json(
+//   appointments.map(item => ({
+//     ...item.toObject(),
+//     id: item._id
+//   }))
+// );
+      //return res.json(appointments.map(({ _id, ...rest }) => ({ id: _id, ...rest })));
     }
 
     // fallback → normal getList
@@ -108,8 +128,11 @@ router.get('/fetchmanyappointments', async (req, res) => {
 })
 router.get("/fetchsingleappointment/:id", async (req, res) => {
   const appointment = await Appointment.findById(req.params.id);
-  res.json(appointment);
- 
+  //res.json(appointment);
+ res.json({
+  ...appointment.toObject(),
+  id: appointment._id
+});
 });
 router.post('/addappointment',async (req,res)=>{
     try {

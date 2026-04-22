@@ -55,21 +55,22 @@ const dataProvider1 = {
         if(resource=="inventory"){
           return fetchUtils.fetchJson(`${apiUrl}/api/${resource}/fetchallinventories?${new URLSearchParams(query)}`)
             .then(({ json }) => ({
-                data: json.data?.map((item, index) => ({ id: item._id,index: index + 1, ...item })),
+                data: json.data?.map((item, index) => ({ ...item,id: item._id?.toString(),index: (page - 1) * perPage + index + 1  })),
                 total: json.total || 0
             }));
         }
         else if(resource=="patienthistory"){
           return fetchUtils.fetchJson(`${apiUrl}/api/${resource}/fetchallpatienthistories?${new URLSearchParams(query)}`)
             .then(({ json }) => ({
-                data: json.data?.map((item, index) => ({ id: item._id,index: index + 1, ...item })),
+                data: json.data?.map((item, index) => ({ ...item ,id: item._id?.toString(),index: (page - 1) * perPage + index + 1 })),
                 total: json.total || 0
             }));
         }
         else{
           return fetchUtils.fetchJson(`${apiUrl}/api/${resource}/fetchall${resource}s?${new URLSearchParams(query)}`)
             .then(({ json }) => ({
-                data: json.data?.map((item, index) => ({ id: item._id,index: index + 1, ...item })),
+                // data: json.data?.map((item, index) => ({ ...item, id: item._id,index: index + 1 })),
+                data: json.data?.map((item, index) => ({ ...item, id: item._id?.toString(),index: (page - 1) * perPage + index + 1})),
                 total: json.total || 0
             }));
         }
@@ -98,10 +99,12 @@ const dataProvider1 = {
     const data = await response.json();
 
     return {
-      data: data.map(item => ({
-        ...item,
-        id: item._id, // important for React Admin
-      })),
+       data: data.map(item => ({
+         ...item,
+         id: item._id?.toString(), // important for React Admin
+       })),
+      
+
     };
   },
   getOne: async (resource, params) => {
@@ -135,7 +138,7 @@ const dataProvider1 = {
                       title2: newPath2,
                   }
                 : null,
-       id: data._id },
+       id: data._id?.toString() },
     };
   },
   // update: (resource, params) => {
@@ -198,7 +201,8 @@ const dataProvider1 = {
     const data = await res.json();
     console.log(data)
     return {
-      data: { ...data, id: data._id },
+      //data: { ...data, id: data._id },
+      data: { ...data, id: data._id?.toString() }
     };
    
    
@@ -244,7 +248,8 @@ const dataProvider1 = {
     const data = await res.json();
 
     return {
-      data: { ...data, id: data.data._id },
+      //data: { ...data, id: data.data._id },
+      data: { ...data.data, id: data.data._id?.toString() },
     };
   },
 
@@ -267,10 +272,11 @@ const dataProvider1 = {
       }),
     });
 
-    const data = await response.json();
+    //const data = await response.json();
 
     return {
-      data: data.data, // must return array of deleted ids
+      //data: data.data, // must return array of deleted ids
+      data: params.ids
     };
   },
   getManyReference: async (resource, params) => {

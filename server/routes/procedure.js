@@ -94,7 +94,7 @@ function generateProcedures(count = 1000) {
 
 router.post('/addbulkprocedure',async (req,res)=>{
   try {
-    
+    let success = false;
 
     const procedures = generateProcedures(1000);
     await Procedure.insertMany(procedures);

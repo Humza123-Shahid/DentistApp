@@ -50,11 +50,14 @@ let filter = {};
 
   const pricings = await Pricing.find(filter)
     .skip((page - 1) * perPage)
-    .limit(perPage);
+    .limit(perPage)
+    //.lean();
 
   const total = await Pricing.countDocuments(filter);
 
   res.json({ data: pricings, total });
+  //const data = pricings.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+   // res.json({ data, total });
 })
 router.get('/fetchmanypricings', async (req, res) => {
     
@@ -65,9 +68,11 @@ router.get('/fetchmanypricings', async (req, res) => {
     if (ids) {
       const pricings = await Pricing.find({
         _id: { $in: ids }
-      });
+      })
+      //.lean();
 
-      return res.json(pricings);
+       return res.json(pricings);
+      //return res.json(pricings.map(({ _id, ...rest }) => ({ id: _id, ...rest })));
     }
 
     // fallback → normal getList
