@@ -10,38 +10,57 @@ A comprehensive dental practice management software built using the **MERN Stack
 > *Do this once, before any patient walks in*
 
 1. **Dentist** → Add all dentists with specialization, contact, and salary
+
 ![Dentist](<app_flow_images/Screenshot (6).png>)
+
 2. **Procedure** → Add all treatments (Root Canal, Cleaning, Filling, etc.)
+
 ![Procedure](<app_flow_images/Screenshot (7).png>)
+
 3. **Pricing** → Assign fees to each procedure *(requires Procedures to be added first)*
+
 ![Prcing](<app_flow_images/Screenshot (8).png>)
+
 4. **Inventory** → Add all supplies/materials with quantity and cost
+
 ![Inventory](<app_flow_images/Screenshot (9).png>)
 
 ### Phase 2 — Patient Registration
 > *When a new patient arrives*
 
 5. **Patient** → Register patient details (name, DOB, contact, gender)
+
 ![Patient](<app_flow_images/Screenshot (11).png>)
+
 6. **Patient History** → Add medical background (chronic conditions, cavities, X-rays)
+
 ![Patient History](<app_flow_images/Screenshot (12).png>)
+
 
 ### Phase 3 — Visit Flow
 > *Every appointment*
 
 7. **Appointment** → Book a slot *(requires Patient + Dentist to be created first)*
+
 ![Appointment](<app_flow_images/Screenshot (13).png>)
+
 8. **Tooth** → Record which teeth are affected and planned procedures
+
 ![Tooth](<app_flow_images/Screenshot (14).png>)
+
    > You can also add and view tooth-related records in the Patient record view using the teeth map. Click the **Save Procedures** button to save tooth data.
+   
    ![Tooth In Patient](<app_flow_images/Screenshot (18).png>)
 
 ### Phase 4 — Post Treatment
 > *After treatment is done*
 
 9. **Expense** → Log any materials/lab fees consumed during treatment
+
 ![Expense](<app_flow_images/Screenshot (15).png>)
+
 10. **Payment** → Record what the patient paid for the appointment
+
 ![Payment(01)](<app_flow_images/Screenshot (16).png>)
 ![Payment(02)](<app_flow_images/Screenshot (17).png>)
 
