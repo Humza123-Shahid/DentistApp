@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the Schema
 const ProcedureSchema = new mongoose.Schema({
 
-  name: {                
+  name: {          //Root Canal, Cleaning, Filling etc.      
     type: String
   },
   code:{

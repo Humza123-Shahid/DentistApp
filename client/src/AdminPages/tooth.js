@@ -51,7 +51,7 @@ return(
     <Create redirect="list">
     <SimpleForm>
       
-      <ReferenceInput source="patient" reference="patient">
+      <ReferenceInput source="patient" reference="patient" perPage={999999}>
         <AutocompleteInput optionText="name" 
             filterToQuery={filterToQuery}
                                 validate={[required()]} />
@@ -153,7 +153,7 @@ export const ToothEdit = () => {
   <Edit>
     <SimpleForm>
       
-      <ReferenceInput source="patient" reference="patient">
+      <ReferenceInput source="patient" reference="patient" perPage={999999}>
         <AutocompleteInput optionText="name" 
         filterToQuery={filterToQuery}
                                 validate={[required()]} />

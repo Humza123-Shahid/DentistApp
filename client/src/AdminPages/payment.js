@@ -50,18 +50,18 @@ export const PaymentCreate = () => {
         <Create redirect="list" title="Create Payment">
             <SimpleForm>
                 {/* <TextInput  source="name" validate={[required()]} /> */}
-                <ReferenceInput source="patientId" reference="patient" >
+                <ReferenceInput source="patientId" reference="patient" perPage={999999}>
                     <AutocompleteInput optionText="name"
                         // filterToQuery={searchText => ({ name: searchText })}
                         filterToQuery={filterToQuery}
                         validate={[required()]} />
                 </ReferenceInput>
-                <ReferenceInput source="providerId" reference="dentist" >
+                <ReferenceInput source="providerId" reference="dentist" perPage={999999}>
                     <AutocompleteInput optionText="name"
                         filterToQuery={filterToQuery}
                         validate={[required()]} />
                 </ReferenceInput>
-                <ReferenceInput source="appointmentId" reference="appointment" >
+                <ReferenceInput source="appointmentId" reference="appointment" perPage={999999}>
                     <AutocompleteInput optionText="appointmentDate"
                         filterToQuery={filterToQuery}
                         validate={[required()]} />
@@ -156,17 +156,17 @@ export const PaymentEdit = () => {
     return(
     <Edit title="Update Payment">
         <SimpleForm>
-            <ReferenceInput source="patientId" reference="patient" >
+            <ReferenceInput source="patientId" reference="patient" perPage={999999}>
                 <AutocompleteInput optionText="name"
                     filterToQuery={filterToQuery}
                     validate={[required()]} />
             </ReferenceInput>
-            <ReferenceInput source="providerId" reference="dentist" >
+            <ReferenceInput source="providerId" reference="dentist" perPage={999999}>
                 <AutocompleteInput optionText="name"
                     filterToQuery={filterToQuery}
                     validate={[required()]} />
             </ReferenceInput>
-            <ReferenceInput source="appointmentId" reference="appointment" >
+            <ReferenceInput source="appointmentId" reference="appointment" perPage={999999}>
                 <AutocompleteInput optionText="appointmentDate"
                     filterToQuery={filterToQuery}
                     validate={[required()]} />

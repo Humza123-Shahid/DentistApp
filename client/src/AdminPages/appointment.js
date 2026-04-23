@@ -52,13 +52,13 @@ export const AppointmentCreate = () => {
         <Create redirect="list" title="Create Appointment">
             <SimpleForm>
                 {/* <TextInput  source="name" validate={[required()]} /> */}
-                <ReferenceInput source="patient" reference="patient" >
+                <ReferenceInput source="patient" reference="patient" perPage={999999} >
                     <AutocompleteInput optionText="name"
                         //filterToQuery={searchText => ({ name: searchText })} 
                         filterToQuery={filterToQuery}
                         validate={[required()]} />
                 </ReferenceInput>
-                <ReferenceInput source="dentist" reference="dentist" >
+                <ReferenceInput source="dentist" reference="dentist" perPage={999999} >
                     <AutocompleteInput optionText="name"
                         // filterToQuery={searchText => ({ name: searchText })}
                         filterToQuery={filterToQuery}
@@ -143,12 +143,12 @@ export const AppointmentEdit = () => {
     return (
         <Edit title="Update Appointment">
             <SimpleForm>
-                <ReferenceInput source="patient" reference="patient" >
+                <ReferenceInput source="patient" reference="patient" perPage={999999}>
                     <AutocompleteInput optionText="name"
                         filterToQuery={filterToQuery}
                         validate={[required()]} />
                 </ReferenceInput>
-                <ReferenceInput source="dentist" reference="dentist" >
+                <ReferenceInput source="dentist" reference="dentist" perPage={999999} >
                     <AutocompleteInput optionText="name"
                         filterToQuery={filterToQuery}
                         validate={[required()]} />

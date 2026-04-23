@@ -51,10 +51,10 @@ return(
     <Create redirect="list" title="Create Pricing">
         <SimpleForm>
             {/* <TextInput  source="name" validate={[required()]} /> */}
-             <ReferenceInput source="procedure" reference="procedure" >
+             <ReferenceInput source="procedure" reference="procedure" perPage={999999}>
                 <AutocompleteInput optionText="name" 
-                // filterToQuery={searchText => ({ name: searchText })} 
-                filterToQuery={filterToQuery}
+                 filterToQuery={searchText => ({ name: searchText })} 
+                //filterToQuery={filterToQuery}
                 validate={[required()]} />
             </ReferenceInput>
             <NumberInput  source="fee" />
@@ -111,7 +111,7 @@ export const PricingEdit = () => {
     return(
     <Edit title="Update Pricing">
         <SimpleForm>
-             <ReferenceInput source="procedure" reference="procedure">
+             <ReferenceInput source="procedure" reference="procedure" perPage={999999}>
                 <AutocompleteInput optionText="name" 
                  //filterToQuery={searchText => ({ name: searchText })} 
                 filterToQuery={filterToQuery}

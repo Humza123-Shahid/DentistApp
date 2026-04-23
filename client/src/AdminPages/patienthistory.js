@@ -46,7 +46,7 @@ export const PatientHistoryCreate = () => {
         <Create redirect="list" title="Create PatientHistory">
             <SimpleForm>
                 {/* <TextInput  source="name" validate={[required()]} /> */}
-                <ReferenceInput source="patient" reference="patient" >
+                <ReferenceInput source="patient" reference="patient" perPage={999999}>
                     <AutocompleteInput optionText="name"
                         filterToQuery={searchText => ({ name: searchText })}
                         validate={[required()]} />
@@ -118,7 +118,7 @@ export const PatientHistoryShow = (props) => (
 export const PatientHistoryEdit = () => (
     <Edit title="Update PatientHistory">
         <SimpleForm>
-            <ReferenceInput source="patient" reference="patient" >
+            <ReferenceInput source="patient" reference="patient" perPage={999999}>
                     <AutocompleteInput optionText="name"
                         filterToQuery={searchText => ({ name: searchText })}
                         validate={[required()]} />
