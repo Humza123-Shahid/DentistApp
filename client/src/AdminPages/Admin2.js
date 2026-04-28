@@ -11,6 +11,7 @@ import { PatientHistoryCreate,PatientHistoryList,PatientHistoryShow,PatientHisto
 import { AppointmentCreate,AppointmentList,AppointmentShow,AppointmentEdit} from './appointment';
 import { PaymentCreate,PaymentList,PaymentShow,PaymentEdit} from './payment';
 import { ToothCreate,ToothList,ToothShow,ToothEdit} from './tooth';
+import { TestimonialCreate,TestimonialList,TestimonialShow,TestimonialEdit} from './testimonial';
 // import { MyLayout } from './MyLayout';
 // import { MyLayout } from './MySidebar';
 
@@ -424,6 +425,7 @@ const MyLayout = (props) => (
          <Resource name="appointment" options={{ label: 'Appointment' }} list={AppointmentList} create={AppointmentCreate} show={AppointmentShow} edit={AppointmentEdit} />
          <Resource name="payment" options={{ label: 'Payment' }} list={PaymentList} create={PaymentCreate} show={PaymentShow} edit={PaymentEdit} />
          <Resource name="tooth" options={{ label: 'Tooth' }} list={ToothList} create={ToothCreate} show={ToothShow} edit={ToothEdit} />
+         <Resource name="testimonial" options={{ label: 'Testimonial' }} list={TestimonialList} create={TestimonialCreate} show={TestimonialShow} edit={TestimonialEdit} />
 
     </Admin>
   )

@@ -26,6 +26,7 @@ app.use('/api/patienthistory', require('./routes/patienthistory'))
 app.use('/api/appointment', require('./routes/appointment'))
 app.use('/api/payment', require('./routes/payment'))
 app.use('/api/tooth', require('./routes/tooth'))
+app.use('/api/testimonial', require('./routes/testimonial'))
 
 app.listen(port,()=>{
     console.log(`Server is Running on : http://localhost:${port}`)

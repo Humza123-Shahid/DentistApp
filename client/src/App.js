@@ -9,6 +9,7 @@ import {
 import { useState,useEffect } from 'react';
 
 import Admin2 from './AdminPages/Admin2';
+import Home from './UserPages/Home';
 
 function App() {
   
@@ -16,6 +17,7 @@ function App() {
     <Routes>
           <Route path="/admin/*" element={<Admin2/>} >
       </Route>
+      <Route path="/" element={<Home/>}/>
       </Routes>
   
   );

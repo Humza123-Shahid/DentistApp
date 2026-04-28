@@ -1,0 +1,53 @@
+.mySwiper1 .swiper-pagination {
+    display: flex;
+  bottom: 85px !important;
+  left: 745px !important;
+  gap:0px !important;
+}
+.mySwiper2 .swiper-pagination {
+    display: flex;
+  bottom: 0px !important;
+  left: 545px !important;
+  gap:0px !important;
+}
+/* Default bullet style */
+.mySwiper1 .swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background: #d7d2d2;
+  opacity: 1;
+  margin: 0 4px;
+  border: 1px solid #e6e6e6;
+  border-radius: 50%;
+  padding: 2px;
+  background-clip: content-box;
+  transition: background .3s ease;
+}
+.mySwiper2 .swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background: #d7d2d2;
+  opacity: 1;
+  margin: 0 4px;
+  border: 1px solid #e6e6e6;
+  border-radius: 50%;
+  padding: 0.5px;
+  background-clip: content-box;
+  transition: background .3s ease;
+}
+/* Active bullet */
+.mySwiper1 .swiper-pagination-bullet-active {
+   background: #fff;
+  padding: 0.5px;
+  background-clip: content-box;
+  /* Like Owl */
+}
+.mySwiper2 .swiper-pagination-bullet-active {
+   background: #46b7de;
+  padding: 0.5px;
+  background-clip: content-box;
+  /* Like Owl */
+}
+/* .swiper-pagination-bullet-active {
+  transform: scale(2);
+} */
