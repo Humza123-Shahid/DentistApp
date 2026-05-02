@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Show, SimpleShowLayout, Datagrid, ReferenceManyField, useShowContext, useListContext, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, useRecordContext, required } from 'react-admin';
 import { useSelector } from 'react-redux';
+import CustomPagination from './CustomPagination';
+
 
 const PROCEDURES = [
     { id: "filling", label: "Filling", color: "#3b82f6", symbol: "F" },
@@ -86,7 +88,7 @@ export const PatientList = () => {
 
 
     return (
-        <List title="Patient">
+        <List title="Patient" pagination={<CustomPagination />}>
             <Datagrid rowClick="show">
 
                 {/* <TextField  source="id" /> */}
@@ -325,7 +327,8 @@ export default function TeethMap() {
             const response = await fetch(`http://localhost:5000/api/tooth/fetchtoothsbypatient/${patient_id}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json' ,
+            'auth-token':localStorage.getItem('token')
                 }
             })
             const json = await response.json();
@@ -437,7 +440,8 @@ export default function TeethMap() {
         const response = await fetch(`http://localhost:5000/api/tooth/addtoothbyadmin/${patient_id}`, {
 
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" ,
+            'auth-token':localStorage.getItem('token') },
             body: JSON.stringify(formattedData),
 
         })

@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField,useGetMany, useListContext,useRecordContext, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput, TimeInput, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
 import { useCallback,useMemo } from 'react';
+import CustomPagination from './CustomPagination';
+
 const StableReferenceField = ({ source, reference, displayField }) => {
     const { data: listData = [] } = useListContext();
 
@@ -85,7 +87,7 @@ export const PaymentList = () => {
 
 
     return (
-        <List title="Payment">
+        <List title="Payment" pagination={<CustomPagination />}>
             <Datagrid rowClick="show">
 
                 {/* <TextField  source="id" /> */}

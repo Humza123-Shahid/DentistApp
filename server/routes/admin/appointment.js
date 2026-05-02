@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const Appointment = require('../models/Appointment')
-const Patient = require('../models/Patient');
-const Dentist = require('../models/Dentist');
+const Appointment = require('../../models/Appointment')
+const Patient = require('../../models/Patient');
+const Dentist = require('../../models/Dentist');
+var fetchuser=require('../../middleware/fetchuser');
 
 function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -64,7 +65,7 @@ success=true;
     console.error('❌ Error inserting appointments:', err);
   }
 })
-router.get('/fetchallappointments', async (req, res) => {
+router.get('/fetchallappointments',fetchuser, async (req, res) => {
     
     // const appointments=await Appointment.find({});
     // res.json(appointments);
@@ -96,7 +97,7 @@ let filter = {};
     //res.json({ data, total });
 
 })
-router.get('/fetchmanyappointments', async (req, res) => {
+router.get('/fetchmanyappointments',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -126,7 +127,7 @@ router.get('/fetchmanyappointments', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingleappointment/:id", async (req, res) => {
+router.get("/fetchsingleappointment/:id",fetchuser, async (req, res) => {
   const appointment = await Appointment.findById(req.params.id);
   //res.json(appointment);
  res.json({
@@ -156,7 +157,7 @@ router.post('/addappointment',async (req,res)=>{
     }
 })
 // ROUTE 3: Update an existing Appointment using :PUT "/api/appointments/updateappointments".Login required
-router.put('/updateappointment/:id',async (req,res)=>{
+router.put('/updateappointment/:id',fetchuser,async (req,res)=>{
     const {patient,dentist,appointmentDate,appointmentTime,durationMinutes,treatmentType,status}=req.body;
     const newAppointment={};
     if(patient){newAppointment.patient=patient};
@@ -175,7 +176,7 @@ router.put('/updateappointment/:id',async (req,res)=>{
     res.json({success: true, data:appointment});
 })
 // ROUTE 4: Delete an existing Appointment using :DELETE "/api/appointments/deleteappointments".Login required
-router.delete('/deleteappointment',async (req,res)=>{
+router.delete('/deleteappointment',fetchuser,async (req,res)=>{
 
     try {
         const { ids } = req.body; // array of ids

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Patient = require('../models/Patient')
+const Patient = require('../../models/Patient')
+var fetchuser=require('../../middleware/fetchuser');
 const firstNames = [
   'Ali', 'Sara', 'Ahmed', 'Fatima', 'Omar', 'Ayesha', 'Hassan', 'Zara',
   'James', 'Emily', 'Michael', 'Sophia', 'David', 'Olivia', 'Daniel', 'Emma',
@@ -81,7 +82,7 @@ success=true;
     console.error('❌ Error:', error.message);
   }
 });
-router.get('/fetchallpatients', async (req, res) => {
+router.get('/fetchallpatients',fetchuser, async (req, res) => {
     
     // const patients=await Patient.find({});
     // res.json(patients);
@@ -101,7 +102,7 @@ router.get('/fetchallpatients', async (req, res) => {
 
   res.json({ data: patients, total });
 })
-router.get('/fetchmanypatients', async (req, res) => {
+router.get('/fetchmanypatients',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -123,11 +124,11 @@ router.get('/fetchmanypatients', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsinglepatient/:id", async (req, res) => {
+router.get("/fetchsinglepatient/:id",fetchuser, async (req, res) => {
   const patient = await Patient.findById(req.params.id);
   res.json(patient);
 });
-router.post('/addpatient', async (req, res) => {
+router.post('/addpatient',fetchuser, async (req, res) => {
 
     // const { title,teaser } = req.body;
     // console.log(title,teaser);
@@ -139,7 +140,7 @@ router.post('/addpatient', async (req, res) => {
     res.json(savedPatient);
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updatepatient/:id',async (req,res)=>{
+router.put('/updatepatient/:id',fetchuser,async (req,res)=>{
     const {name, email, address, contact, dateOfBirth, age, gender, nationality}=req.body;
     const newPatient={};
     if(name){newPatient.name=name};
@@ -161,7 +162,7 @@ router.put('/updatepatient/:id',async (req,res)=>{
 })
 
 // })
-router.delete("/deletepatient", async (req, res) => {
+router.delete("/deletepatient",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

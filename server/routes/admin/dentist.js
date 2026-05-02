@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Dentist = require('../models/Dentist')
+const Dentist = require('../../models/Dentist')
+var fetchuser=require('../../middleware/fetchuser');
 const firstNames = {
   male:   ['James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Ahmed'],
   female: ['Mary', 'Patricia', 'Jennifer', 'Linda', 'Barbara', 'Susan', 'Jessica', 'Sarah', 'Karen', 'Fatima'],
@@ -58,7 +59,7 @@ success=true;
     console.error('❌ Error seeding data:', error);
   } 
 })
-router.get('/fetchalldentists', async (req, res) => {
+router.get('/fetchalldentists',fetchuser, async (req, res) => {
     
     // const dentists=await Dentist.find({});
     // res.json(dentists);
@@ -70,6 +71,8 @@ router.get('/fetchalldentists', async (req, res) => {
       const page = parseInt(req.query.pagination ? JSON.parse(req.query.pagination).page : 1);
       const perPage = parseInt(req.query.pagination ? JSON.parse(req.query.pagination).perPage : 25);
     
+      
+
       const dentists = await Dentist.find(filter)
         .skip((page - 1) * perPage)
         .limit(perPage);
@@ -78,7 +81,7 @@ router.get('/fetchalldentists', async (req, res) => {
     
       res.json({ data: dentists, total });
 })
-router.get('/fetchmanydentists', async (req, res) => {
+router.get('/fetchmanydentists',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -100,11 +103,11 @@ router.get('/fetchmanydentists', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingledentist/:id", async (req, res) => {
+router.get("/fetchsingledentist/:id",fetchuser, async (req, res) => {
   const dentist = await Dentist.findById(req.params.id);
   res.json(dentist);
 });
-router.post('/adddentist', async (req, res) => {
+router.post('/adddentist',fetchuser, async (req, res) => {
 
     // const { title,teaser } = req.body;
     // console.log(title,teaser);
@@ -116,7 +119,7 @@ router.post('/adddentist', async (req, res) => {
     res.json(savedDentist);
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updatedentist/:id',async (req,res)=>{
+router.put('/updatedentist/:id',fetchuser,async (req,res)=>{
     const {name,salary, contact, specialization, experienceLevel, gender}=req.body;
     const newDentist={};
     if(name){newDentist.name=name};
@@ -135,7 +138,7 @@ router.put('/updatedentist/:id',async (req,res)=>{
     res.json({success: true, data:dentist});
 })
 
-router.delete("/deletedentist", async (req, res) => {
+router.delete("/deletedentist",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

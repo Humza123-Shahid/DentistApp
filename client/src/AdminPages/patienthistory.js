@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField, TextField,useGetMany, useListContext,useRecordContext, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, ReferenceField, AutocompleteInput, SelectInput, RichTextInput, DateInput,FileInput,FileField, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
 import { useCallback,useMemo } from 'react';
+import CustomPagination from './CustomPagination';
+
 
 const StableReferenceField = ({ source, reference, displayField }) => {
     const { data: listData = [] } = useListContext();
@@ -72,7 +74,7 @@ const sequentialId = (record, source, index) => {
 };
 export const PatientHistoryList = () => {
     return (
-<List title="PatientHistory" >
+<List title="PatientHistory" pagination={<CustomPagination />}>
    
             <Datagrid rowClick="show"> 
 

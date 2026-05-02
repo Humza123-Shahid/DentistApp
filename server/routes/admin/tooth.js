@@ -1,7 +1,8 @@
 const express = require('express')
-const Tooth = require('../models/Tooth')
-const Patient = require('../models/Patient');
+const Tooth = require('../../models/Tooth')
+const Patient = require('../../models/Patient');
 const router = express.Router();
+var fetchuser=require('../../middleware/fetchuser');
 
 const procedureTypes = ['Filling', 'Crown', 'Root Canal', 'Extraction', 'Implant', 'Veneer', 'Bridge', 'Cleaning'];
 const statuses = ['Completed', 'Planned', 'Existing'];
@@ -54,7 +55,7 @@ if (patientIds.length === 0 ) {
     console.error('❌ Error:', err);
   } 
 })
-router.get("/fetchalltooths", async (req, res) => {
+router.get("/fetchalltooths",fetchuser, async (req, res) => {
 
     let filter = {};
       if (req.query.filter) {
@@ -75,7 +76,7 @@ router.get("/fetchalltooths", async (req, res) => {
       //const data = tooths.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
     //res.json({ data, total });
       })
-router.get('/fetchmanytooths', async (req, res) => {
+router.get('/fetchmanytooths',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -99,7 +100,7 @@ router.get('/fetchmanytooths', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get('/fetchtoothsbypatient/:id', async (req, res) => {
+router.get('/fetchtoothsbypatient/:id',fetchuser, async (req, res) => {
     
     try {
       // console.log(req.params.id);
@@ -112,7 +113,7 @@ router.get('/fetchtoothsbypatient/:id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingletooth/:id", async (req, res) => {
+router.get("/fetchsingletooth/:id",fetchuser, async (req, res) => {
   try {
     const tooth = await Tooth.findById(req.params.id);
       res.json(tooth);
@@ -120,7 +121,7 @@ router.get("/fetchsingletooth/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.post("/addtooth", async (req, res) => {
+router.post("/addtooth",fetchuser, async (req, res) => {
   try {
     console.log(req.body);
     const tooth = new Tooth(req.body);
@@ -131,7 +132,7 @@ router.post("/addtooth", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.post("/addtoothbyadmin/:id", async (req, res) => {
+router.post("/addtoothbyadmin/:id",fetchuser, async (req, res) => {
   try {
     console.log(req.body);
     
@@ -148,7 +149,7 @@ router.post("/addtoothbyadmin/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.put("/updatetooth/:id", async (req, res) => {
+router.put("/updatetooth/:id",fetchuser, async (req, res) => {
   try {
     const updated = await Tooth.findByIdAndUpdate(
       req.params.id,
@@ -167,7 +168,7 @@ router.put("/updatetooth/:id", async (req, res) => {
   }
 });
 
-router.delete('/deletetooth',async (req,res)=>{
+router.delete('/deletetooth',fetchuser,async (req,res)=>{
 
     try {
         const { ids } = req.body; // array of ids

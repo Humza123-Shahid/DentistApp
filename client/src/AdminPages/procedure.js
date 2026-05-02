@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { Show, SimpleShowLayout, Datagrid, useRedirect, FunctionField, TextField, NumberField, List, DataTable, DateField, BooleanField, Create, SimpleForm, TextInput, NumberInput, Edit, ReferenceInput, AutocompleteInput, SelectInput, RichTextInput, DateInput,ImageInput,ImageField, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
+import CustomPagination from './CustomPagination';
+
 
 export const ProcedureCreate = () => {
     const choices = [
@@ -37,7 +39,7 @@ export const ProcedureList = () => {
 
 
     return (
-        <List title="Procedure">
+        <List title="Procedure" pagination={<CustomPagination />}>
             <Datagrid rowClick="show">
 
                 {/* <TextField  source="id" /> */}

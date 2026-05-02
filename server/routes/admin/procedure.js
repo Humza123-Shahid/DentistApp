@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const Procedure = require('../models/Procedure')
+const Procedure = require('../../models/Procedure')
 const categories = ['Endodontics', 'Prosthodontics', 'Periodontics', 'Orthodontics', 'Oral Surgery'];
+var fetchuser=require('../../middleware/fetchuser');
 
 const proceduresByCategory = {
   Endodontics: [
@@ -106,7 +107,7 @@ router.post('/addbulkprocedure',async (req,res)=>{
     console.error('❌ Error:', err);
   } 
 })
-router.get('/fetchallprocedures', async (req, res) => {
+router.get('/fetchallprocedures',fetchuser, async (req, res) => {
     
     // const procedures=await Procedure.find({});
     // res.json(procedures);
@@ -126,7 +127,7 @@ router.get('/fetchallprocedures', async (req, res) => {
 
   res.json({ data: procedures, total });
 })
-router.get('/fetchmanyprocedures', async (req, res) => {
+router.get('/fetchmanyprocedures',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -148,11 +149,11 @@ router.get('/fetchmanyprocedures', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingleprocedure/:id", async (req, res) => {
+router.get("/fetchsingleprocedure/:id",fetchuser, async (req, res) => {
   const procedure = await Procedure.findById(req.params.id);
   res.json(procedure);
 });
-router.post('/addprocedure', async (req, res) => {
+router.post('/addprocedure',fetchuser, async (req, res) => {
 
     // const { title,teaser } = req.body;
     // console.log(title,teaser);
@@ -164,7 +165,7 @@ router.post('/addprocedure', async (req, res) => {
     res.json(savedProcedure);
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updateprocedure/:id',async (req,res)=>{
+router.put('/updateprocedure/:id',fetchuser,async (req,res)=>{
     const {name, code, description, category, durationMinutes}=req.body;
     const newProcedure={};
     if(name){newProcedure.name=name};
@@ -193,7 +194,7 @@ router.put('/updateprocedure/:id',async (req,res)=>{
 //     procedure =await Procedure.findByIdAndDelete(req.params.id)
 //     res.json({"Success":"Procedure has been deleted.",procedure:procedure});
 // })
-router.delete("/deleteprocedure", async (req, res) => {
+router.delete("/deleteprocedure",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

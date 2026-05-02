@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Inventory = require('../models/Inventory')
+var fetchuser=require('../../middleware/fetchuser');
+const Inventory = require('../../models/Inventory')
 
 const itemNames = [
   'Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Headphones',
@@ -47,7 +48,7 @@ router.post('/addbulkinventory',async (req,res)=>{
   }
  
 })
-router.get('/fetchallinventories', async (req, res) => {
+router.get('/fetchallinventories',fetchuser, async (req, res) => {
     
     // const inventories=await Inventory.find({});
     // res.json(inventories);
@@ -67,7 +68,7 @@ router.get('/fetchallinventories', async (req, res) => {
 
   res.json({ data: inventories, total });
 })
-router.get('/fetchmanyinventories', async (req, res) => {
+router.get('/fetchmanyinventories',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -89,11 +90,11 @@ router.get('/fetchmanyinventories', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingleinventory/:id", async (req, res) => {
+router.get("/fetchsingleinventory/:id",fetchuser, async (req, res) => {
   const inventory = await Inventory.findById(req.params.id);
   res.json(inventory);
 });
-router.post('/addinventory', async (req, res) => {
+router.post('/addinventory',fetchuser, async (req, res) => {
 
     // const { title,teaser } = req.body;
     // console.log(title,teaser);
@@ -105,7 +106,7 @@ router.post('/addinventory', async (req, res) => {
     res.json(savedInventory);
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updateinventory/:id',async (req,res)=>{
+router.put('/updateinventory/:id',fetchuser,async (req,res)=>{
     const {name, quantity, description, costPerUnit}=req.body;
     const newInventory={};
     if(name){newInventory.name=name};
@@ -122,7 +123,7 @@ router.put('/updateinventory/:id',async (req,res)=>{
 })
 
 // })
-router.delete("/deleteinventory", async (req, res) => {
+router.delete("/deleteinventory",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Expense = require('../models/Expense')
+const Expense = require('../../models/Expense')
+var fetchuser=require('../../middleware/fetchuser');
 const CATEGORIES = ['Lab Fees', 'Supplies', 'Rent', 'Utilities'];
 
 const NOTES_BY_CATEGORY = {
@@ -65,7 +66,7 @@ success=true;
   }
  
 })
-router.get('/fetchallexpenses', async (req, res) => {
+router.get('/fetchallexpenses',fetchuser, async (req, res) => {
     
     // const expenses=await Expense.find({});
     // res.json(expenses);
@@ -85,7 +86,7 @@ router.get('/fetchallexpenses', async (req, res) => {
 
   res.json({ data: expenses, total });
 })
-router.get('/fetchmanyexpenses', async (req, res) => {
+router.get('/fetchmanyexpenses',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -107,11 +108,11 @@ router.get('/fetchmanyexpenses', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingleexpense/:id", async (req, res) => {
+router.get("/fetchsingleexpense/:id",fetchuser, async (req, res) => {
   const expense = await Expense.findById(req.params.id);
   res.json(expense);
 });
-router.post('/addexpense', async (req, res) => {
+router.post('/addexpense',fetchuser, async (req, res) => {
 
     // const { title,teaser } = req.body;
     // console.log(title,teaser);
@@ -123,7 +124,7 @@ router.post('/addexpense', async (req, res) => {
     res.json(savedExpense);
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updateexpense/:id',async (req,res)=>{
+router.put('/updateexpense/:id',fetchuser,async (req,res)=>{
     const {expenseDate, category, amount, notes}=req.body;
     const newExpense={};
     if(expenseDate){newExpense.expenseDate=expenseDate};
@@ -140,7 +141,7 @@ router.put('/updateexpense/:id',async (req,res)=>{
 })
 
 // })
-router.delete("/deleteexpense", async (req, res) => {
+router.delete("/deleteexpense",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

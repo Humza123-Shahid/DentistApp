@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { Show, SimpleShowLayout,Datagrid,useRedirect ,FunctionField, TextField,NumberField,List, DataTable, DateField, BooleanField,Create, SimpleForm, TextInput,NumberInput,Edit,ReferenceInput,ReferenceField,AutocompleteInput,SelectInput,RichTextInput, DateInput, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
+import CustomPagination from './CustomPagination';
+
 const genderChoices = [
     { id: 'male', name: 'Male' },
     { id: 'female', name: 'Female' },
@@ -35,7 +37,7 @@ export const ExpenseList = () => {
     
     
     return(
-    <List title="Expense">
+    <List title="Expense" perPage={10} pagination={<CustomPagination />}>
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}

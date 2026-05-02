@@ -1,8 +1,9 @@
 const express=require('express');
 const router= express.Router();
-const uploadpatienthistory = require("../middleware/uploadpatienthistory");
-const PatientHistory = require('../models/PatientHistory');
-const Patient = require('../models/Patient');
+const uploadpatienthistory = require("../../middleware/uploadpatienthistory");
+const PatientHistory = require('../../models/PatientHistory');
+const Patient = require('../../models/Patient');
+var fetchuser=require('../../middleware/fetchuser');
 
 
 const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -53,7 +54,7 @@ router.post('/addbulkpatienthistory',async (req,res)=>{
   }
 })
 
-router.get('/fetchallpatienthistories', async (req, res) => {
+router.get('/fetchallpatienthistories',fetchuser, async (req, res) => {
     
     // const patienthistories=await Procedure.find({});
     // res.json(patienthistories);
@@ -76,7 +77,7 @@ router.get('/fetchallpatienthistories', async (req, res) => {
   //const data = patienthistories.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
   //res.json({ data, total });
 })
-router.get('/fetchmanypatienthistories', async (req, res) => {
+router.get('/fetchmanypatienthistories',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -100,11 +101,11 @@ router.get('/fetchmanypatienthistories', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsinglepatienthistory/:id", async (req, res) => {
+router.get("/fetchsinglepatienthistory/:id",fetchuser, async (req, res) => {
   const patienthistory = await PatientHistory.findById(req.params.id);
   res.json(patienthistory);
 });
-router.get('/patienthistorybypatientId', async (req, res) => {
+router.get('/patienthistorybypatientId',fetchuser, async (req, res) => {
     // const { filter } = req.query;
     // const { filterObj  } = JSON.parse(filter || '{}');
     
@@ -151,7 +152,7 @@ router.get('/patienthistorybypatientId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-router.get('/patient-history/:id', async (req, res) => {
+router.get('/patient-history/:id',fetchuser, async (req, res) => {
     const history = await PatientHistory.findById(req.params.id);
     res.json({ data: history });
 });
@@ -169,7 +170,7 @@ router.get('/patient-history/:id', async (req, res) => {
 // })
 // ROUTE 2: Add a new Question using :POST "/api/questions/addquestion".Login required
 // router.post('/addpatienthistory',fetchuser,uploadpatienthistory.single("file"),[
-router.post('/addpatienthistory',uploadpatienthistory.fields([
+router.post('/addpatienthistory',fetchuser,uploadpatienthistory.fields([
   { name: 'xray', maxCount: 1 }, // Expects a single file from the 'profile' field
   { name: 'intraoralscan', maxCount: 1 }  // Expects up to 5 files from the 'gallery' field
 ]),async (req,res)=>{
@@ -200,7 +201,7 @@ router.post('/addpatienthistory',uploadpatienthistory.fields([
     }
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updatepatienthistory/:id',uploadpatienthistory.fields([
+router.put('/updatepatienthistory/:id',fetchuser,uploadpatienthistory.fields([
   { name: 'xray', maxCount: 1 }, // Expects a single file from the 'profile' field
   { name: 'intraoralscan', maxCount: 1 }  // Expects up to 5 files from the 'gallery' field
 ]),async (req,res)=>{
@@ -241,7 +242,7 @@ router.put('/updatepatienthistory/:id',uploadpatienthistory.fields([
     res.json({success: true, data:patienthistory});
 })
 // ROUTE 4: Delete an existing Question using :DELETE "/api/questions/deletequestion".Login required
-router.delete("/deletepatienthistory", async (req, res) => {
+router.delete("/deletepatienthistory",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

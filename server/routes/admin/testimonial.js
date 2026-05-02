@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const Testimonial = require('../models/Testimonial')
+const Testimonial = require('../../models/Testimonial')
+var fetchuser=require('../../middleware/fetchuser');
 
-
-router.get('/fetchalltestimonials', async (req, res) => {
+router.get('/fetchalltestimonials',fetchuser, async (req, res) => {
     
     // const testimonials=await Testimonial.find({});
     // res.json(testimonials);
@@ -23,7 +23,7 @@ router.get('/fetchalltestimonials', async (req, res) => {
 
   res.json({ data: testimonials, total });
 })
-router.get('/fetchmanytestimonials', async (req, res) => {
+router.get('/fetchmanytestimonials',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -45,11 +45,11 @@ router.get('/fetchmanytestimonials', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsingletestimonial/:id", async (req, res) => {
+router.get("/fetchsingletestimonial/:id",fetchuser, async (req, res) => {
   const testimonial = await Testimonial.findById(req.params.id);
   res.json(testimonial);
 });
-router.post('/addtestimonial', async (req, res) => {
+router.post('/addtestimonial',fetchuser, async (req, res) => {
 
     // const { title,teaser } = req.body;
         const { patientName, profession, comment, reviewDate } = req.body;
@@ -62,7 +62,7 @@ router.post('/addtestimonial', async (req, res) => {
     res.json(savedtestimonial);
 })
 // ROUTE 3: Update an existing Question using :PUT "/api/questions/updatequestion".Login required
-router.put('/updatetestimonial/:id',async (req,res)=>{
+router.put('/updatetestimonial/:id',fetchuser,async (req,res)=>{
     const {patientName, profession, comment, reviewDate}=req.body;
     const newtestimonial={};
     if(patientName){newtestimonial.patientName=patientName};
@@ -79,7 +79,7 @@ router.put('/updatetestimonial/:id',async (req,res)=>{
 })
 
 // })
-router.delete("/deletetestimonial", async (req, res) => {
+router.delete("/deletetestimonial",fetchuser, async (req, res) => {
   try {
     const { ids } = req.body; // array of ids
 

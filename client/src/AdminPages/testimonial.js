@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { Show, SimpleShowLayout,Datagrid,useRedirect ,FunctionField, TextField,NumberField,List, DataTable, DateField, BooleanField,Create, SimpleForm, TextInput,NumberInput,Edit,ReferenceInput,ReferenceField,AutocompleteInput,SelectInput,RichTextInput, DateInput, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
+import CustomPagination from './CustomPagination';
 
 
 export const TestimonialCreate = () => {
@@ -30,7 +31,7 @@ export const TestimonialList = () => {
     
     
     return(
-    <List title="Testimonial">
+    <List title="Testimonial" pagination={<CustomPagination />}>
         <Datagrid  rowClick="show">
           
             {/* <TextField  source="id" /> */}

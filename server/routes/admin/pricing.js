@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const Pricing = require('../models/Pricing')
-const Procedure = require('../models/Procedure')
+const Pricing = require('../../models/Pricing')
+const Procedure = require('../../models/Procedure')
+var fetchuser=require('../../middleware/fetchuser');
 
 function randomDate(start, end) {
   return new Date(
@@ -36,7 +37,7 @@ router.post('/addbulkpricing',async (req,res)=>{
     console.error('❌ Error seeding data:', err);
   } 
 });
-router.get('/fetchallpricings', async (req, res) => {
+router.get('/fetchallpricings',fetchuser, async (req, res) => {
     
     // const pricings=await Pricing.find({});
     // res.json(pricings);
@@ -59,7 +60,7 @@ let filter = {};
   //const data = pricings.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
    // res.json({ data, total });
 })
-router.get('/fetchmanypricings', async (req, res) => {
+router.get('/fetchmanypricings',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -83,13 +84,12 @@ router.get('/fetchmanypricings', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsinglepricing/:id", async (req, res) => {
+router.get("/fetchsinglepricing/:id",fetchuser, async (req, res) => {
   const pricing = await Pricing.findById(req.params.id);
   res.json(pricing);
  
 });
-router.post('/addpricing',[
-],async (req,res)=>{
+router.post('/addpricing',fetchuser,async (req,res)=>{
     try {
         
         let success = false;
@@ -111,7 +111,7 @@ router.post('/addpricing',[
     }
 })
 // ROUTE 3: Update an existing Pricing using :PUT "/api/pricings/updatepricings".Login required
-router.put('/updatepricing/:id',async (req,res)=>{
+router.put('/updatepricing/:id',fetchuser,async (req,res)=>{
     const {procedure,fee,effectiveDate}=req.body;
     const newPricing={};
     if(procedure){newPricing.procedure=procedure};
@@ -126,7 +126,7 @@ router.put('/updatepricing/:id',async (req,res)=>{
     res.json({success: true, data:pricing});
 })
 // ROUTE 4: Delete an existing Pricing using :DELETE "/api/pricings/deletepricings".Login required
-router.delete('/deletepricing',async (req,res)=>{
+router.delete('/deletepricing',fetchuser,async (req,res)=>{
 
     try {
         const { ids } = req.body; // array of ids

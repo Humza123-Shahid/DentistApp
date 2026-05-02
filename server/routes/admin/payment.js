@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const Payment = require('../models/Payment')
-const Appointment = require('../models/Appointment')
-const Patient = require('../models/Patient');
-const Dentist = require('../models/Dentist');
+const Payment = require('../../models/Payment')
+const Appointment = require('../../models/Appointment')
+const Patient = require('../../models/Patient');
+const Dentist = require('../../models/Dentist');
+var fetchuser=require('../../middleware/fetchuser');
 
 
 const paymentMethods = ['Cash', 'Credit Card', 'Debit Card', 'Insurance', 'Bank Transfer', 'Online'];
@@ -65,7 +66,7 @@ router.post('/addbulkpayment',async (req,res)=>{
     console.error('❌ Error inserting Payment:', err);
   }
 })
-router.get('/fetchallpayments', async (req, res) => {
+router.get('/fetchallpayments',fetchuser, async (req, res) => {
     
     // const payments=await Payment.find({});
     // res.json(payments);
@@ -88,7 +89,7 @@ let filter = {};
   //const data = payments.map(({ _id, ...rest }) => ({ id: _id.toString(), ...rest }));
     //res.json({ data, total });
 })
-router.get('/fetchmanypayments', async (req, res) => {
+router.get('/fetchmanypayments',fetchuser, async (req, res) => {
     
     try {
     const { ids } = req.query;
@@ -112,12 +113,12 @@ router.get('/fetchmanypayments', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-router.get("/fetchsinglepayment/:id", async (req, res) => {
+router.get("/fetchsinglepayment/:id",fetchuser, async (req, res) => {
   const payment = await Payment.findById(req.params.id);
   res.json(payment);
  
 });
-router.get('/paymentbypatientId', async (req, res) => {
+router.get('/paymentbypatientId',fetchuser, async (req, res) => {
     // const { filter } = req.query;
     // const { filterObj  } = JSON.parse(filter || '{}');
     
@@ -164,7 +165,7 @@ router.get('/paymentbypatientId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-router.post('/addpayment',async (req,res)=>{
+router.post('/addpayment',fetchuser,async (req,res)=>{
     try {
         
         let success = false;
@@ -186,7 +187,7 @@ router.post('/addpayment',async (req,res)=>{
     }
 })
 // ROUTE 3: Update an existing Payment using :PUT "/api/payments/updatepayments".Login required
-router.put('/updatepayment/:id',async (req,res)=>{
+router.put('/updatepayment/:id',fetchuser,async (req,res)=>{
     const {patientId,providerId,appointmentId,paymentDate,paymentMethod,paymentType,totalAmount,amount,notes}=req.body;
     const newPayment={};
     if(patientId){newPayment.patientId=patientId};
@@ -207,7 +208,7 @@ router.put('/updatepayment/:id',async (req,res)=>{
     res.json({success: true, data:payment});
 })
 // ROUTE 4: Delete an existing Payment using :DELETE "/api/payments/deletepayments".Login required
-router.delete('/deletepayment',async (req,res)=>{
+router.delete('/deletepayment',fetchuser,async (req,res)=>{
 
     try {
         const { ids } = req.body; // array of ids

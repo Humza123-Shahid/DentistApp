@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { Show, SimpleShowLayout,Datagrid,ArrayInput ,SimpleFormIterator,useGetMany, useListContext,useRecordContext, TextField,NumberField,List, ArrayField, DateField, SingleFieldList,Create, SimpleForm, TextInput,NumberInput,Edit,ReferenceInput,ReferenceField,AutocompleteInput,SelectInput,ChipField, DateInput,TimeInput, required } from 'react-admin';
 // import RichTextInput from 'ra-input-rich-text';
 import { useCallback,useMemo } from 'react';
+import CustomPagination from './CustomPagination';
+
 
 const StableReferenceField = ({ source, reference, displayField }) => {
     const { data: listData = [] } = useListContext();
@@ -100,7 +102,7 @@ const sequentialId = (record, source, index) => {
 };
 export const ToothList = () => {
     return(
-  <List>
+  <List pagination={<CustomPagination />}>
     <Datagrid rowClick="show">
       <TextField source="index" label="#" />
       
