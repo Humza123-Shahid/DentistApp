@@ -31,6 +31,7 @@ app.use('/api/tooth', require('./routes/admin/tooth'))
 app.use('/api/testimonial', require('./routes/admin/testimonial'))
 app.use('/api/setting', require('./routes/admin/setting'))
 app.use('/api/social', require('./routes/admin/social'))
+app.use('/api/dashboard', require('./routes/admin/dashboard'));
 
 app.listen(port,()=>{
     console.log(`Server is Running on : http://localhost:${port}`)

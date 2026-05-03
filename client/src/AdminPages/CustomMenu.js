@@ -1,6 +1,7 @@
 import { Menu, useLogout } from 'react-admin';
 import { MenuItem, ListItemIcon, ListItemText,Divider  } from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useNavigate } from 'react-router-dom';
 
 const CustomMenu = () => {
@@ -12,6 +13,7 @@ const CustomMenu = () => {
   return (
     <Menu>
       {/* <Menu.ResourceItems /> */}
+      <Menu.DashboardItem />
  <Menu.ResourceItem name="dentist" />
       <Menu.ResourceItem name="procedure" />
       <Menu.ResourceItem name="pricing" />

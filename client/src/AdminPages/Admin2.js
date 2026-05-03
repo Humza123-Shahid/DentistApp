@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Admin, Resource, fetchUtils, defaultTheme, Sidebar, Layout } from 'react-admin';
 import AdminGuard from './AdminGuard';
 // import jsonServerProvider from 'ra-data-json-server';
+import Dashboard from './dashboard';
 import { ProcedureCreate, ProcedureList, ProcedureShow, ProcedureEdit } from './procedure';
 import { PricingCreate, PricingList, PricingShow, PricingEdit } from './pricing';
 import { DentistCreate, DentistList, DentistShow, DentistEdit } from './dentist';
@@ -483,8 +484,8 @@ const Admin2 = (props) => {
   // });
   return (
     <AdminGuard>
-      <Admin basename="/admin" layout={MyLayout} dataProvider={dataProvider1}>
-        {/* <Resource name="dentist" options={{ label: 'People' }} list={ProcedureList} create={ProcedureCreate} show={ProcedureShow} edit={ProcedureEdit} /> */}
+      <Admin basename="/admin" layout={MyLayout} dataProvider={dataProvider1} dashboard={Dashboard} >
+        {/* <Resource name="dentist" options={{ label: 'People' }} list={ProcedureList} create={ProcedureCreate} show={ProcedureShow} edit={ProcedureEdit} /> */}   
         <Resource name="dentist" options={{ label: 'Dentist' }} list={DentistList} create={DentistCreate} show={DentistShow} edit={DentistEdit} />
         <Resource name="procedure" options={{ label: 'Procedure' }} list={ProcedureList} create={ProcedureCreate} show={ProcedureShow} edit={ProcedureEdit} />
         <Resource name="pricing" options={{ label: 'Pricing' }} list={PricingList} create={PricingCreate} show={PricingShow} edit={PricingEdit} />

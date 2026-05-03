@@ -71,7 +71,7 @@ function generateCode(base, index) {
 
 // ── Generator ────────────────────────────────────────────────────────────────
 
-function generateProcedures(count = 1000) {
+function generateProcedures(count = 50) {
   const procedures = [];
 
   for (let i = 1; i <= count; i++) {
@@ -97,7 +97,7 @@ router.post('/addbulkprocedure',async (req,res)=>{
   try {
     let success = false;
 
-    const procedures = generateProcedures(1000);
+    const procedures = generateProcedures(50);
     await Procedure.insertMany(procedures);
 
     console.log('🎉 Successfully inserted 1000 procedure records');

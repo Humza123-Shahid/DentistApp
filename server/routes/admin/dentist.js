@@ -36,7 +36,7 @@ router.post('/addbulkdentist',async (req,res)=>{
 let success = false;
     const dentists = [];
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 10; i++) {
       const gender  = getRandom(genders);
       const firstName = getRandom(firstNames[gender]);
       const lastName  = getRandom(lastNames);
